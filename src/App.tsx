@@ -1,12 +1,17 @@
 import { Component, createSignal, Signal, For, Show, Accessor, createMemo } from 'solid-js';
 
 import packageJson from '../package.json';
+
 import { AppTitle } from './components/AppTitle';
 import DndJsonHandler from './components/DndJsonHandler';
 
+import { checkQuestJsonData } from './helpers/validation';
+
+import { QuestData } from './types';
+
 type LoadedJsonFile = {
   name: string;
-  data: object;
+  data: QuestData[];
 };
 
 const greyColor = '#737373';
@@ -112,11 +117,17 @@ const App: Component = () => {
       <AppTitle>{`Custom Quests Editor v${packageJson.version}`}</AppTitle>
       <DndJsonHandler
         isDraggingSignal={isDraggingSignal}
-        onDropJson={(fileName, data) => {
+        onDropJson={(fileName, rawData) => {
           const files = loadedJsonFiles();
           const lastIndex = files.length;
 
-          setLoadedJsonFiles([...files, { name: fileName, data }]);
+          try {
+            const data = checkQuestJsonData(rawData);
+            setLoadedJsonFiles([...files, { name: fileName, data }]);
+          } catch (err) {
+            console.warn(`Custom Quests Editor: Unable to load json quest file '${fileName}'`);
+            console.error(`${err}`);
+          }
 
           if (selectedQuestFile() === null) {
             // automatically set the selected quest if no selection
