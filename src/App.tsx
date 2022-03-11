@@ -1,4 +1,4 @@
-import { Component, createSignal, Show } from 'solid-js';
+import { Component, createMemo, createSignal, Show } from 'solid-js';
 import { createStore } from 'solid-js/store';
 
 import packageJson from '../package.json';
@@ -6,7 +6,9 @@ import packageJson from '../package.json';
 import { AppTitle } from './components/AppTitle';
 import DndJsonHandler from './components/DndJsonHandler';
 import { DownloadButton } from './components/DownloadButton';
+import { MainMenu } from './components/MainMenu';
 import QuestsFiles from './components/QuestsFiles';
+import QuestsList from './components/QuestsList';
 
 import { checkQuestJsonData } from './helpers/validation';
 
@@ -26,7 +28,7 @@ type State = {
 const initialState: State = {
   selections: {
     file: null,
-    quest: null,
+    quest: 0,
   },
   files: [],
 };
@@ -35,6 +37,19 @@ const App: Component = () => {
   const [state, setState] = createStore<State>(initialState);
   const isDraggingSignal = createSignal(false);
   const [isDragging] = isDraggingSignal;
+
+  const selectedFile = createMemo(() => {
+    return state.files[state.selections.file ?? 0];
+  });
+
+  const selectedQuest = createMemo(() => {
+    const f = selectedFile();
+
+    if (f) {
+      return f.data[state.selections.quest ?? 0];
+    }
+    return undefined;
+  });
 
   return (
     <div
@@ -59,7 +74,7 @@ const App: Component = () => {
             return;
           }
 
-          // automatically set the selected quest if no selection
+          // automatically set the selected quest file if nothing is selected
           if (state.selections.file === null) {
             setState('selections', 'file', lastIndex);
           }
@@ -72,8 +87,19 @@ const App: Component = () => {
         loadedJsonFiles={state.files}
         selectedFile={state.selections.file}
       />
+
       <Show when={state.selections.file !== null}>
+        <QuestsList
+          onClickQuest={index => {
+            setState('selections', 'quest', index);
+          }}
+          file={selectedFile()}
+          selectedQuest={state.selections.quest}
+        />
         <DownloadButton loadedJsonFiles={state.files} selectedQuestFile={state.selections.file} />
+      </Show>
+      <Show when={selectedQuest() !== undefined}>
+        <MainMenu title="plop">{selectedQuest()?.id}</MainMenu>
       </Show>
     </div>
   );
