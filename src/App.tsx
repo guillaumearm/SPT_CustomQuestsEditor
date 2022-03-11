@@ -1,109 +1,38 @@
-import { Component, createSignal, Signal, For, Show, Accessor, createMemo } from 'solid-js';
+import { Component, createSignal, Show } from 'solid-js';
+import { createStore } from 'solid-js/store';
 
 import packageJson from '../package.json';
 
 import { AppTitle } from './components/AppTitle';
 import DndJsonHandler from './components/DndJsonHandler';
+import { DownloadButton } from './components/DownloadButton';
+import QuestsFiles from './components/QuestsFiles';
 
 import { checkQuestJsonData } from './helpers/validation';
 
-import { QuestData } from './types';
-
-type LoadedJsonFile = {
-  name: string;
-  data: QuestData[];
-};
+import { LoadedJsonFile } from './types';
 
 const greyColor = '#737373';
 const lightGreyColor = '#b3b3b3';
 
-const convertObjectToDataString = (data: object) => {
-  return 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(data, undefined, 4));
+type State = {
+  selections: {
+    file: number | null;
+    quest: number | null;
+  };
+  files: LoadedJsonFile[];
 };
 
-const liStyle = (selected = false) => ({
-  'margin-bottom': '1px',
-  border: '1px solid grey',
-  'text-align': 'center',
-  cursor: 'pointer',
-  'background-color': selected ? 'green' : 'inherit',
-});
-
-type QuestFilesProps = {
-  loadedJsonFiles: LoadedJsonFile[];
-  selectedQuestFileSignal: Signal<null | number>;
-};
-
-const QuestsFiles: Component<QuestFilesProps> = props => {
-  const [selectedQuestFile, setSelectedQuestFile] = props.selectedQuestFileSignal;
-
-  return (
-    <div
-      style={{
-        border: '1px solid black',
-        margin: '1px',
-        padding: '10px',
-        width: '15%',
-        height: '100%',
-        'background-color': 'lightgrey',
-        float: 'left',
-      }}
-    >
-      <div style={{ 'text-align': 'center' }}>
-        <h4>Quest files</h4>
-      </div>
-      <ul
-        style={{
-          margin: 0,
-          padding: 0,
-          'overflow-x': 'hidden',
-          'white-space': 'nowrap',
-        }}
-      >
-        <For each={props.loadedJsonFiles}>
-          {(loadedJsonFile, index) => (
-            <li
-              onClick={() => setSelectedQuestFile(index)}
-              style={liStyle(index() === selectedQuestFile())}
-            >
-              {loadedJsonFile.name}
-            </li>
-          )}
-        </For>
-      </ul>
-    </div>
-  );
-};
-
-type DownloadButtonProps = {
-  fileName: Accessor<string>;
-  fileData: Accessor<string>;
-};
-
-const DownloadButton: Component<DownloadButtonProps> = props => {
-  return (
-    <a download={props.fileName()} href={props.fileData()}>
-      <button type="button">{`Download ${props.fileName()} file`}</button>
-    </a>
-  );
-};
-
-const getDownloadButtonProps = (
-  loadedJsonFiles: Accessor<LoadedJsonFile[]>,
-  selectedQuestFile: Accessor<null | number>,
-): DownloadButtonProps => {
-  const file = createMemo(() => loadedJsonFiles()[selectedQuestFile() ?? -1]);
-
-  const fileName = createMemo(() => file()?.name ?? '');
-  const fileData = createMemo(() => convertObjectToDataString(file()?.data ?? {}));
-
-  return { fileName, fileData };
+const initialState: State = {
+  selections: {
+    file: null,
+    quest: null,
+  },
+  files: [],
 };
 
 const App: Component = () => {
-  const selectedQuestFileSignal = createSignal<null | number>(null);
-  const [selectedQuestFile, setSelectedQuestFile] = selectedQuestFileSignal;
-  const [loadedJsonFiles, setLoadedJsonFiles] = createSignal<LoadedJsonFile[]>([]);
+  const [state, setState] = createStore<State>(initialState);
   const isDraggingSignal = createSignal(false);
   const [isDragging] = isDraggingSignal;
 
@@ -118,29 +47,33 @@ const App: Component = () => {
       <DndJsonHandler
         isDraggingSignal={isDraggingSignal}
         onDropJson={(fileName, rawData) => {
-          const files = loadedJsonFiles();
+          const files = state.files;
           const lastIndex = files.length;
 
           try {
             const data = checkQuestJsonData(rawData);
-            setLoadedJsonFiles([...files, { name: fileName, data }]);
+            setState('files', files => [...files, { name: fileName, data }]);
           } catch (err) {
             console.warn(`Custom Quests Editor: Unable to load json quest file '${fileName}'`);
             console.error(`${err}`);
+            return;
           }
 
-          if (selectedQuestFile() === null) {
-            // automatically set the selected quest if no selection
-            setSelectedQuestFile(lastIndex);
+          // automatically set the selected quest if no selection
+          if (state.selections.file === null) {
+            setState('selections', 'file', lastIndex);
           }
         }}
       />
       <QuestsFiles
-        loadedJsonFiles={loadedJsonFiles()}
-        selectedQuestFileSignal={selectedQuestFileSignal}
+        onClickFile={i => {
+          setState('selections', 'file', i);
+        }}
+        loadedJsonFiles={state.files}
+        selectedFile={state.selections.file}
       />
-      <Show when={selectedQuestFile() !== null}>
-        <DownloadButton {...getDownloadButtonProps(loadedJsonFiles, selectedQuestFile)} />
+      <Show when={state.selections.file !== null}>
+        <DownloadButton loadedJsonFiles={state.files} selectedQuestFile={state.selections.file} />
       </Show>
     </div>
   );

@@ -96,3 +96,8 @@ export type QuestData = {
   missions?: QuestMission[];
   rewards?: QuestRewards;
 };
+
+export type LoadedJsonFile = {
+  name: string;
+  data: QuestData[];
+};

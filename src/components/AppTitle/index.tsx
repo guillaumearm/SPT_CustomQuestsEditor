@@ -9,7 +9,7 @@ export const AppTitle: Component<AppTitleProps> = props => {
         'text-align': 'center',
       }}
     >
-      {props.children.toUpperCase()}
+      {props.children}
     </h2>
   );
 };
