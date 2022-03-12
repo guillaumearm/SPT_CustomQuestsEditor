@@ -38,6 +38,10 @@ const App: Component = () => {
   const isDraggingSignal = createSignal(false);
   const [isDragging] = isDraggingSignal;
 
+  const getSelectedQuestIndex = createMemo(() => {
+    return state.selections.quest;
+  });
+
   const selectedFile = createMemo(() => {
     return state.files[state.selections.file ?? 0];
   });
@@ -119,7 +123,11 @@ const App: Component = () => {
         <DownloadButton loadedJsonFiles={state.files} selectedQuestFile={state.selections.file} />
       </Show>
       <Show when={selectedQuest() !== undefined && updateQuest()! !== undefined}>
-        <QuestForm quest={selectedQuest()!} updateQuest={updateQuest()!} />
+        <QuestForm
+          questIndex={getSelectedQuestIndex()}
+          quest={selectedQuest()!}
+          updateQuest={updateQuest()!}
+        />
       </Show>
     </div>
   );

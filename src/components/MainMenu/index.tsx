@@ -1,11 +1,12 @@
 import { Component, JSX } from 'solid-js';
 
-const liStyle = (selected = false) => ({
+const liStyle = (selected = false, disabled = false) => ({
   'margin-bottom': '1px',
   border: '1px solid grey',
   'text-align': 'center',
   cursor: 'pointer',
   'background-color': selected ? 'green' : 'inherit',
+  'text-decoration': disabled ? 'line-through' : 'inherit',
 });
 
 type Props = {
@@ -47,11 +48,12 @@ type ItemProps = {
   onClick: () => void;
   selected: boolean;
   children: JSX.Element;
+  disabled?: boolean;
 };
 
 export const MainMenuItem: Component<ItemProps> = props => {
   return (
-    <li onClick={() => props.onClick()} style={liStyle(props.selected)}>
+    <li onClick={() => props.onClick()} style={liStyle(props.selected, !!props.disabled)}>
       {props.children}
     </li>
   );

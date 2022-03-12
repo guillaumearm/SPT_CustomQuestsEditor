@@ -16,6 +16,7 @@ const QuestsList: Component<Props> = props => {
       <For each={props.file?.data}>
         {(quest, index) => (
           <MainMenuItem
+            disabled={Boolean(quest.disabled)}
             selected={index() === props.selectedQuest}
             onClick={() => props.onClickQuest(index())}
           >

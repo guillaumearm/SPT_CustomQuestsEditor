@@ -7,7 +7,7 @@ type Props = {
   updateQuestString: QuestStringUpdator;
   questString?: QuestString;
   fieldName: string;
-  questId: string;
+  uniqQuestId: string; // questId concatened to the file index
 };
 
 type SelectEvent = Event & { target: Element; currentTarget: HTMLSelectElement };
@@ -15,14 +15,15 @@ type SelectEvent = Event & { target: Element; currentTarget: HTMLSelectElement }
 export const QuestStringInput: Component<Props> = props => {
   const [currentLocale, setCurrentLocale] = createSignal<LocaleName | null>(null);
 
-  createEffect(() => {
-    if (typeof props.questString === 'object') {
+  createEffect(questId => {
+    if (questId !== props.uniqQuestId && typeof props.questString === 'object') {
       const localeName = (Object.keys(props.questString)[0] as LocaleName) ?? null;
       if (localeName) {
+        // console.log('set locale because fx!');
         setCurrentLocale(localeName);
       }
     }
-    return props.questId;
+    return props.uniqQuestId;
   });
 
   const onChangeWhenString = (questString: QuestString | undefined) => (e: SelectEvent) => {
