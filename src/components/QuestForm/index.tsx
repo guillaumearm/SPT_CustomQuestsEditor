@@ -3,6 +3,7 @@ import { DeepReadonly } from 'solid-js/store';
 import { QuestData, QuestUpdator } from '../../types';
 import { QuestSimpleInput } from '../forms/QuestSimpleInput';
 import { QuestStringInput } from '../forms/QuestStringInput';
+import { QuestTraderDropdown } from '../forms/QuestTraderDropdown';
 
 type Props = {
   quest: DeepReadonly<QuestData>;
@@ -25,7 +26,7 @@ export const QuestForm: Component<Props> = props => {
       <h4 style={{ 'text-align': 'center' }}>Selected quest {props.quest.id}</h4>
       <form style={{ 'margin-left': '21px' }}>
         <QuestSimpleInput {...props} fieldName="id" />
-        <QuestSimpleInput {...props} fieldName="trader_id" />
+        <QuestTraderDropdown {...props} />
         <QuestStringInput
           updateQuestString={fn => props.updateQuest(q => ({ ...q, name: fn(q.name) }))}
           questString={props.quest.name}

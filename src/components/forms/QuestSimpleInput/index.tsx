@@ -2,7 +2,7 @@ import { Component } from 'solid-js';
 import { DeepReadonly } from 'solid-js/store';
 import { QuestData, QuestUpdator } from '../../../types';
 
-type FieldNames = 'id' | 'trader_id';
+type FieldNames = 'id';
 
 type Props = {
   fieldName: FieldNames;
