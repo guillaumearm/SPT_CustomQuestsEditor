@@ -5,6 +5,7 @@ import { QuestDisabledInput } from '../forms/QuestDisabledInput';
 import { QuestSimpleInput } from '../forms/QuestSimpleInput';
 import { QuestStringInput } from '../forms/QuestStringInput';
 import { QuestGenericDropdown } from '../forms/QuestGenericDropdown';
+import { QuestIdsForm } from '../forms/QuestIdsForm';
 
 export const ALL_TRADERS = [
   'prapor',
@@ -18,6 +19,7 @@ export const ALL_TRADERS = [
 ];
 
 type Props = {
+  allQuestIds: string[];
   questIndex: number | null;
   quest: DeepReadonly<QuestData>;
   updateQuest: QuestUpdator;
@@ -35,13 +37,14 @@ export const QuestForm: Component<Props> = props => {
         margin: '1px',
         padding: '10px',
         width: '50%',
-        height: '100%',
+        height: '400px',
+        'overflow-y': 'scroll',
         'background-color': 'lightgrey',
         float: 'left',
       }}
     >
-      <h4 style={{ 'text-align': 'center' }}>Selected quest {props.quest.id}</h4>
-      <form style={{ 'margin-left': '21px' }}>
+      <h4 style={{ 'text-align': 'center' }}>Quest configuration</h4>
+      <form onSubmit={() => {}} style={{ 'margin-left': '21px' }}>
         <QuestDisabledInput formIndex={2} {...props} />
         <QuestSimpleInput formIndex={4} {...props} fieldName="id" />
         <QuestGenericDropdown
@@ -58,6 +61,18 @@ export const QuestForm: Component<Props> = props => {
           uniqQuestId={uniqQuestId()}
           questString={props.quest.name}
           fieldName="name"
+        />
+        <QuestIdsForm
+          possibleValues={props.allQuestIds}
+          {...props}
+          uniqQuestId={uniqQuestId()}
+          fieldName="locked_by_quests"
+        />
+        <QuestIdsForm
+          possibleValues={props.allQuestIds}
+          {...props}
+          uniqQuestId={uniqQuestId()}
+          fieldName="unlock_on_quest_start"
         />
       </form>
     </div>

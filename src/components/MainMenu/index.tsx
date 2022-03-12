@@ -1,17 +1,46 @@
 import { Component, JSX } from 'solid-js';
 
-const liStyle = (selected = false, disabled = false) => ({
-  'margin-bottom': '1px',
-  border: '1px solid grey',
-  'text-align': 'center',
-  cursor: 'pointer',
-  'background-color': selected ? 'green' : 'inherit',
-  'text-decoration': disabled ? 'line-through' : 'inherit',
-});
+const liStyle = (selected = false, disabled = false) => {
+  const getBackgroundColor = () => {
+    if (disabled && selected) {
+      return '#606060';
+    }
+    if (disabled) {
+      return '#AAAAAA';
+    }
+    if (selected) {
+      return '#303030';
+    }
+
+    return 'inherit';
+  };
+
+  const getColor = () => {
+    if (disabled) {
+      return 'inherit';
+    }
+
+    if (selected) {
+      return 'white';
+    }
+    return 'inherit';
+  };
+
+  return {
+    'margin-bottom': '1px',
+    border: '1px solid grey',
+    'text-align': 'center',
+    cursor: 'pointer',
+    'background-color': getBackgroundColor(),
+    color: getColor(),
+    'text-decoration': disabled ? 'line-through' : 'inherit',
+  };
+};
 
 type Props = {
   title: string;
   children: JSX.Element;
+  isDragging: boolean;
 };
 
 export const MainMenu: Component<Props> = props => {
@@ -22,8 +51,9 @@ export const MainMenu: Component<Props> = props => {
         margin: '1px',
         padding: '10px',
         width: '15%',
-        height: '100%',
-        'background-color': 'lightgrey',
+        height: '400px',
+        'overflow-y': 'scroll',
+        'background-color': props.isDragging ? '#505050' : 'lightgrey',
         float: 'left',
       }}
     >

@@ -32,6 +32,7 @@ const DndJsonHandler: Component<Props> = props => {
   };
 
   const dragOver = (event: DragEvent) => {
+    setIsDragging(true);
     event.preventDefault();
   };
 

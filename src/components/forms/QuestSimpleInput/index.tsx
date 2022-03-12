@@ -19,7 +19,7 @@ export const QuestSimpleInput: Component<Props> = props => {
           display: 'inline-block',
           float: 'left',
           clear: 'left',
-          width: '120px',
+          width: '180px',
           'text-align': 'right',
           'margin-right': '10px',
         }}

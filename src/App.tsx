@@ -1,5 +1,5 @@
 import { Component, createMemo, createSignal, Show } from 'solid-js';
-import { createStore } from 'solid-js/store';
+import { createStore, DeepReadonly } from 'solid-js/store';
 
 import packageJson from '../package.json';
 
@@ -31,6 +31,25 @@ const initialState: State = {
     quest: 0,
   },
   files: [],
+};
+
+const getAllQuestIds = (files: DeepReadonly<LoadedJsonFile[]>): string[] => {
+  const result: Record<string, boolean> = {};
+
+  files.forEach(file => {
+    file.data.forEach(quest => {
+      result[quest.id] = true;
+      quest.locked_by_quests?.forEach(qId => {
+        result[qId] = true;
+      });
+
+      quest.unlock_on_quest_start?.forEach(qId => {
+        result[qId] = true;
+      });
+    });
+  });
+
+  return Object.keys(result);
 };
 
 const App: Component = () => {
@@ -71,6 +90,10 @@ const App: Component = () => {
     return undefined;
   });
 
+  const allQuestIds = createMemo(() => {
+    return getAllQuestIds(state.files);
+  });
+
   const selectFile = (i: number) => {
     setState('selections', 'file', i);
   };
@@ -109,6 +132,7 @@ const App: Component = () => {
         }}
       />
       <QuestsFiles
+        isDragging={isDragging}
         onClickFile={selectFile}
         loadedJsonFiles={state.files}
         selectedFile={state.selections.file}
@@ -120,17 +144,20 @@ const App: Component = () => {
           file={selectedFile()}
           selectedQuest={state.selections.quest}
         />
+      </Show>
+      <Show when={selectedQuest() !== undefined && updateQuest()! !== undefined}>
+        <QuestForm
+          allQuestIds={allQuestIds()}
+          questIndex={getSelectedQuestIndex()}
+          quest={selectedQuest()!}
+          updateQuest={updateQuest()!}
+        />
+      </Show>
+      <Show when={state.selections.file !== null}>
         <DownloadButton
           tabIndex={-1}
           loadedJsonFiles={state.files}
           selectedQuestFile={state.selections.file}
-        />
-      </Show>
-      <Show when={selectedQuest() !== undefined && updateQuest()! !== undefined}>
-        <QuestForm
-          questIndex={getSelectedQuestIndex()}
-          quest={selectedQuest()!}
-          updateQuest={updateQuest()!}
         />
       </Show>
     </div>

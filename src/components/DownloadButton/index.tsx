@@ -19,7 +19,7 @@ export const DownloadButton: Component<DownloadButtonProps> = props => {
   const fileData = createMemo(() => convertObjectToDataString(file()?.data ?? {}));
 
   return (
-    <a download={fileName()} href={fileData()}>
+    <a style={{}} download={fileName()} href={fileData()}>
       <button tabIndex={props.tabIndex} type="button">{`Download ${fileName()} file`}</button>
     </a>
   );

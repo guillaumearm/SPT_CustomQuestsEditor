@@ -80,7 +80,7 @@ export const QuestStringInput: Component<Props> = props => {
   const renderLocaleValue = (localeName: LocaleName) => {
     if (typeof props.questString === 'object') {
       const locale = props.questString[localeName];
-      return locale ? ` * : ${props.questString[localeName]}` : '';
+      return locale ? ` : ${props.questString[localeName]}` : '';
     }
     return '';
   };
@@ -92,7 +92,7 @@ export const QuestStringInput: Component<Props> = props => {
           display: 'inline-block',
           float: 'left',
           clear: 'left',
-          width: '120px',
+          width: '180px',
           'text-align': 'right',
           'margin-right': '10px',
         }}
@@ -100,6 +100,14 @@ export const QuestStringInput: Component<Props> = props => {
       >
         {props.fieldName}:{' '}
       </label>
+      <input
+        tabIndex={props.formIndex}
+        style={{ display: 'inline-block', float: 'left', width: '180px' }}
+        onInput={onInputChange}
+        value={inputValue()}
+        type="text"
+        id={`form_${props.fieldName}`}
+      />
       <Switch>
         <Match when={typeof props.questString === 'string' || props.questString === undefined}>
           <select
@@ -117,7 +125,7 @@ export const QuestStringInput: Component<Props> = props => {
           <select
             tabIndex={props.formIndex + 1}
             onChange={onChangeWhenObject}
-            style={{ 'max-width': '150px' }}
+            style={{ 'max-width': '180px' }}
           >
             <For each={ALL_LOCALES}>
               {localeName => (
@@ -130,14 +138,6 @@ export const QuestStringInput: Component<Props> = props => {
           </select>
         </Match>
       </Switch>
-      <input
-        tabIndex={props.formIndex}
-        style={{ display: 'inline-block', float: 'left' }}
-        onInput={onInputChange}
-        value={inputValue()}
-        type="text"
-        id={`form_${props.fieldName}`}
-      />
     </div>
   );
 };

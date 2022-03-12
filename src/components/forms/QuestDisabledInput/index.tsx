@@ -14,13 +14,13 @@ export const QuestDisabledInput: Component<Props> = props => {
   });
 
   return (
-    <>
+    <div style={{ padding: '15px' }}>
       <label
         style={{
           display: 'inline-block',
           float: 'left',
           clear: 'left',
-          width: '120px',
+          width: '180px',
           'text-align': 'right',
           'margin-right': '10px',
         }}
@@ -37,6 +37,6 @@ export const QuestDisabledInput: Component<Props> = props => {
         type="checkbox"
         checked={questEnabled()}
       />
-    </>
+    </div>
   );
 };

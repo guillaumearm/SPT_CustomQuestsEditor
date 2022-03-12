@@ -12,7 +12,7 @@ type Props = {
 
 const QuestsList: Component<Props> = props => {
   return (
-    <MainMenu title="Chained quests">
+    <MainMenu isDragging={false} title="Chained quests">
       <For each={props.file?.data}>
         {(quest, index) => (
           <MainMenuItem
@@ -24,6 +24,7 @@ const QuestsList: Component<Props> = props => {
           </MainMenuItem>
         )}
       </For>
+      {props.children}
     </MainMenu>
   );
 };
