@@ -86,7 +86,7 @@ export const QuestStringInput: Component<Props> = props => {
   };
 
   return (
-    <div style={{ padding: '15px' }}>
+    <div style={{ 'padding-left': '15px', 'padding-top': '15px' }}>
       <label
         style={{
           display: 'inline-block',

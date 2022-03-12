@@ -14,6 +14,7 @@ import { QuestGenericDropdown } from '../forms/QuestGenericDropdown';
 import { QuestIdsForm } from '../forms/QuestIdsForm';
 import { ALL_QUEST_TYPES } from '../../helpers/validation';
 import { QuestSimpleDropdown } from '../forms/QuestSimpleDropdown';
+import { ALL_QUESTS_IMAGES } from '../../helpers/all_quests_images';
 
 export const ALL_TRADERS = [
   'prapor',
@@ -70,21 +71,46 @@ export const QuestForm: Component<Props> = props => {
           questString={props.quest.name}
           fieldName="name"
         />
+        <QuestStringInput
+          formIndex={10}
+          updateQuestString={fn =>
+            props.updateQuest(q => ({ ...q, description: fn(q.description) }))
+          }
+          uniqQuestId={uniqQuestId()}
+          questString={props.quest.description}
+          fieldName="description"
+        />
+        <QuestStringInput
+          formIndex={12}
+          updateQuestString={fn =>
+            props.updateQuest(q => ({ ...q, success_message: fn(q.success_message) }))
+          }
+          uniqQuestId={uniqQuestId()}
+          questString={props.quest.success_message}
+          fieldName="success_message"
+        />
         <QuestSimpleDropdown
           fieldName="type"
-          formIndex={10}
+          formIndex={14}
           values={ALL_QUEST_TYPES}
           selectedValue={props.quest.type ?? ALL_QUEST_TYPES[0]}
           onValueChanged={v => props.updateQuest(q => ({ ...q, type: v as QuestType }))}
         />
         <QuestSimpleDropdown
           fieldName="descriptive_location"
-          formIndex={12}
+          formIndex={16}
           values={ALL_DESCRIPTIVE_LOCATION}
           selectedValue={props.quest.descriptive_location ?? ALL_DESCRIPTIVE_LOCATION[0]}
           onValueChanged={v =>
             props.updateQuest(q => ({ ...q, descriptive_location: v as DescriptiveLocation }))
           }
+        />
+        <QuestSimpleDropdown
+          fieldName="image"
+          formIndex={18}
+          values={ALL_QUESTS_IMAGES}
+          selectedValue={props.quest.image ?? ALL_QUESTS_IMAGES[0]}
+          onValueChanged={v => props.updateQuest(q => ({ ...q, image: v as string }))}
         />
         <QuestIdsForm
           possibleValues={props.allQuestIds}
