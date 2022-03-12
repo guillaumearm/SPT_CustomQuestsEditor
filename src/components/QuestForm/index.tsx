@@ -29,6 +29,7 @@ export const QuestForm: Component<Props> = props => {
         <QuestTraderDropdown {...props} />
         <QuestStringInput
           updateQuestString={fn => props.updateQuest(q => ({ ...q, name: fn(q.name) }))}
+          questId={props.quest.id}
           questString={props.quest.name}
           fieldName="name"
         />

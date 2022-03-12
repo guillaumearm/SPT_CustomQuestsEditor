@@ -1,4 +1,4 @@
-import { Component, createMemo, createSignal, For, Match, Switch } from 'solid-js';
+import { Component, createEffect, createMemo, createSignal, For, Match, Switch } from 'solid-js';
 import { ALL_LOCALES } from '../../../helpers/locales';
 import { isValidLocale } from '../../../helpers/queststring_validation';
 import { QuestString, LocaleName, QuestStringUpdator } from '../../../types';
@@ -7,12 +7,23 @@ type Props = {
   updateQuestString: QuestStringUpdator;
   questString?: QuestString;
   fieldName: string;
+  questId: string;
 };
 
 type SelectEvent = Event & { target: Element; currentTarget: HTMLSelectElement };
 
 export const QuestStringInput: Component<Props> = props => {
   const [currentLocale, setCurrentLocale] = createSignal<LocaleName | null>(null);
+
+  createEffect(() => {
+    if (typeof props.questString === 'object') {
+      const localeName = (Object.keys(props.questString)[0] as LocaleName) ?? null;
+      if (localeName) {
+        setCurrentLocale(localeName);
+      }
+    }
+    return props.questId;
+  });
 
   const onChangeWhenString = (questString: QuestString | undefined) => (e: SelectEvent) => {
     const selectedValue = e.currentTarget.value;
