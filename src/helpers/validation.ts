@@ -1,7 +1,22 @@
-import { QuestData, QuestType, QuestRewards } from '../types';
+import { QuestData, QuestType, QuestRewards, ALL_DESCRIPTIVE_LOCATION } from '../types';
 import { assertValidMission } from './mission_validation';
 import { assertValidQuestString } from './queststring_validation';
-const ALL_QUEST_TYPES = ['Completion', 'PickUp', 'Elimination', 'Loyalty', 'Discover'];
+
+export const ALL_QUEST_TYPES = ['Completion', 'PickUp', 'Elimination', 'Loyalty', 'Discover'];
+
+const DESCRIPTIVE_LOCATION_ALIASES: Record<string, string> = {
+  rezervbase: 'reserve',
+  bigmap: 'customs',
+  labs: 'laboratory',
+  '56f40101d2720b2a4d8b45d6': 'customs',
+  '55f2d3fd4bdc2d5f408b4567': 'factory',
+  '5714dbc024597771384a510d': 'interchange',
+  '5b0fc42d86f7744a585f9105': 'laboratory',
+  '5704e4dad2720bb55b8b4567': 'lighthouse',
+  '5704e5fad2720bc05b8b4567': 'reserve',
+  '5704e554d2720bac5b8b456e': 'shoreline',
+  '5704e3c2d2720bac5b8b4567': 'woods',
+};
 
 const error = (msg: string) => new Error(msg);
 
@@ -54,6 +69,12 @@ const assertValidQuest = (questData: any): asserts questData is QuestData => {
     throw error(`'descriptive_location' should be a string`);
   }
 
+  if (
+    q.descriptive_location !== undefined &&
+    !ALL_DESCRIPTIVE_LOCATION.includes(q.descriptive_location)
+  ) {
+    throw error(`unknown 'descriptive_location' : ${q.descriptive_location}`);
+  }
   if (q.type && !isValidQuestType(q.type)) {
     throw error(`invalid quest 'type' provided`);
   }
@@ -118,9 +139,18 @@ const assertValidQuest = (questData: any): asserts questData is QuestData => {
 export const checkQuestJsonData = (givenData: any): QuestData[] => {
   const data: any[] = Array.isArray(givenData) ? givenData : [givenData];
 
-  data.forEach(questData => {
+  const newData = data.map(questData => {
+    const descriptive_location: string | undefined = questData.descriptive_location;
+    return {
+      ...questData,
+      descriptive_location:
+        DESCRIPTIVE_LOCATION_ALIASES[descriptive_location ?? ''] ?? descriptive_location,
+    };
+  });
+
+  newData.forEach(questData => {
     void assertValidQuest(questData);
   });
 
-  return data;
+  return newData;
 };

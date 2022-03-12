@@ -1,5 +1,21 @@
 import { DeepReadonly } from 'solid-js/store';
 
+const ALL_DESCRIPTIVE_LOCATION_OBJ = {
+  any: true,
+  customs: true,
+  factory: true,
+  laboratory: true,
+  interchange: true,
+  lighthouse: true,
+  reserve: true,
+  shoreline: true,
+  woods: true,
+};
+
+export const ALL_DESCRIPTIVE_LOCATION = Object.keys(ALL_DESCRIPTIVE_LOCATION_OBJ);
+
+export type DescriptiveLocation = keyof typeof ALL_DESCRIPTIVE_LOCATION_OBJ;
+
 export type LocalizedString = {
   ch?: string;
   cz?: string;
@@ -88,7 +104,7 @@ export type QuestData = {
   id: string;
   trader_id: string;
   disabled?: boolean;
-  descriptive_location?: string; // TODO: aliases conversion
+  descriptive_location?: DescriptiveLocation;
   type?: QuestType;
   image?: string;
   name?: QuestString;

@@ -112,7 +112,6 @@ export const QuestGenericDropdown: Component<Props> = props => {
         </Match>
         <Match when={!adding()}>
           <select
-            value="skier"
             onChange={onSelectChange}
             style={{ display: 'inline-block', float: 'left', width: '180px' }}
             tabIndex={props.formIndex}

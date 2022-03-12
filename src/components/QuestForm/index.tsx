@@ -1,11 +1,19 @@
 import { Component, createMemo } from 'solid-js';
 import { DeepReadonly } from 'solid-js/store';
-import { QuestData, QuestUpdator } from '../../types';
+import {
+  ALL_DESCRIPTIVE_LOCATION,
+  DescriptiveLocation,
+  QuestData,
+  QuestType,
+  QuestUpdator,
+} from '../../types';
 import { QuestDisabledInput } from '../forms/QuestDisabledInput';
 import { QuestSimpleInput } from '../forms/QuestSimpleInput';
 import { QuestStringInput } from '../forms/QuestStringInput';
 import { QuestGenericDropdown } from '../forms/QuestGenericDropdown';
 import { QuestIdsForm } from '../forms/QuestIdsForm';
+import { ALL_QUEST_TYPES } from '../../helpers/validation';
+import { QuestSimpleDropdown } from '../forms/QuestSimpleDropdown';
 
 export const ALL_TRADERS = [
   'prapor',
@@ -61,6 +69,22 @@ export const QuestForm: Component<Props> = props => {
           uniqQuestId={uniqQuestId()}
           questString={props.quest.name}
           fieldName="name"
+        />
+        <QuestSimpleDropdown
+          fieldName="type"
+          formIndex={10}
+          values={ALL_QUEST_TYPES}
+          selectedValue={props.quest.type ?? ALL_QUEST_TYPES[0]}
+          onValueChanged={v => props.updateQuest(q => ({ ...q, type: v as QuestType }))}
+        />
+        <QuestSimpleDropdown
+          fieldName="descriptive_location"
+          formIndex={12}
+          values={ALL_DESCRIPTIVE_LOCATION}
+          selectedValue={props.quest.descriptive_location ?? ALL_DESCRIPTIVE_LOCATION[0]}
+          onValueChanged={v =>
+            props.updateQuest(q => ({ ...q, descriptive_location: v as DescriptiveLocation }))
+          }
         />
         <QuestIdsForm
           possibleValues={props.allQuestIds}
