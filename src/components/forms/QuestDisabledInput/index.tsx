@@ -3,6 +3,7 @@ import { DeepReadonly } from 'solid-js/store';
 import { QuestData, QuestUpdator } from '../../../types';
 
 type Props = {
+  formIndex: number;
   quest: DeepReadonly<QuestData>;
   updateQuest: QuestUpdator;
 };
@@ -28,6 +29,8 @@ export const QuestDisabledInput: Component<Props> = props => {
         {'enabled: '}
       </label>
       <input
+        tabIndex={props.formIndex}
+        id="form_disabled"
         onChange={e => {
           props.updateQuest(q => ({ ...q, disabled: !e.currentTarget.checked }));
         }}

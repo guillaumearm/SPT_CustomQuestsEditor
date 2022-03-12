@@ -120,7 +120,11 @@ const App: Component = () => {
           file={selectedFile()}
           selectedQuest={state.selections.quest}
         />
-        <DownloadButton loadedJsonFiles={state.files} selectedQuestFile={state.selections.file} />
+        <DownloadButton
+          tabIndex={-1}
+          loadedJsonFiles={state.files}
+          selectedQuestFile={state.selections.file}
+        />
       </Show>
       <Show when={selectedQuest() !== undefined && updateQuest()! !== undefined}>
         <QuestForm

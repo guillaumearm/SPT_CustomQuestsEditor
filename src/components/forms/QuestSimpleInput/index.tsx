@@ -5,6 +5,7 @@ import { QuestData, QuestUpdator } from '../../../types';
 type FieldNames = 'id';
 
 type Props = {
+  formIndex: number;
   fieldName: FieldNames;
   quest: DeepReadonly<QuestData>;
   updateQuest: QuestUpdator;
@@ -32,6 +33,7 @@ export const QuestSimpleInput: Component<Props> = props => {
         value={props.quest[props.fieldName]}
         type="text"
         id={`form_${props.fieldName}`}
+        tabIndex={props.formIndex}
       />
     </div>
   );

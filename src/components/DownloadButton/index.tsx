@@ -3,6 +3,7 @@ import { DeepReadonly } from 'solid-js/store';
 import { LoadedJsonFile } from '../../types';
 
 type DownloadButtonProps = {
+  tabIndex?: number;
   loadedJsonFiles: DeepReadonly<LoadedJsonFile[]>;
   selectedQuestFile: null | number;
 };
@@ -19,7 +20,7 @@ export const DownloadButton: Component<DownloadButtonProps> = props => {
 
   return (
     <a download={fileName()} href={fileData()}>
-      <button type="button">{`Download ${fileName()} file`}</button>
+      <button tabIndex={props.tabIndex} type="button">{`Download ${fileName()} file`}</button>
     </a>
   );
 };
