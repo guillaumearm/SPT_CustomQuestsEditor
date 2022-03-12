@@ -1,23 +1,9 @@
-import { QuestString } from '../types';
+import { LocaleName, QuestString } from '../types';
+import { ALL_LOCALES } from './locales';
 
-const ALL_LOCALES = [
-  'ch',
-  'cz',
-  'en',
-  'es-mx',
-  'es',
-  'fr',
-  'ge',
-  'hu',
-  'it',
-  'jp',
-  'kr',
-  'pl',
-  'po',
-  'ru',
-  'sk',
-  'tu',
-];
+export const isValidLocale = (str: string): str is LocaleName => {
+  return (ALL_LOCALES as string[]).includes(str);
+};
 
 const checkForQuestStringErrors = (questString: any): string | null => {
   if (typeof questString === 'string') {
@@ -28,7 +14,7 @@ const checkForQuestStringErrors = (questString: any): string | null => {
     let localesAreOk = true;
 
     Object.keys(questString).forEach(localeName => {
-      if (!ALL_LOCALES.includes(localeName)) {
+      if (!isValidLocale(localeName)) {
         localesAreOk = false;
       }
     });

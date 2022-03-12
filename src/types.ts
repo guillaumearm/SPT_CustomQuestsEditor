@@ -1,4 +1,6 @@
-type LocalizedString = {
+import { DeepReadonly } from 'solid-js/store';
+
+export type LocalizedString = {
   ch?: string;
   cz?: string;
   en?: string;
@@ -16,6 +18,8 @@ type LocalizedString = {
   sk?: string;
   tu?: string;
 };
+
+export type LocaleName = keyof LocalizedString;
 
 export type QuestType = 'Completion' | 'PickUp' | 'Elimination' | 'Loyalty' | 'Discover';
 export type QuestString = string | LocalizedString;
@@ -101,3 +105,11 @@ export type LoadedJsonFile = {
   name: string;
   data: QuestData[];
 };
+
+type QuestUpdateFn = (q: DeepReadonly<QuestData>) => DeepReadonly<QuestData>;
+type QuestStringUpdateFn = (q: DeepReadonly<QuestString | undefined>) => DeepReadonly<QuestString>;
+
+type Updator<T> = (fn: T) => void;
+
+export type QuestUpdator = Updator<QuestUpdateFn>;
+export type QuestStringUpdator = Updator<QuestStringUpdateFn>;

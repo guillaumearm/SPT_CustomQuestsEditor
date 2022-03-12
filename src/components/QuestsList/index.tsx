@@ -12,14 +12,14 @@ type Props = {
 
 const QuestsList: Component<Props> = props => {
   return (
-    <MainMenu title="Quests">
+    <MainMenu title="Chained quests">
       <For each={props.file?.data}>
         {(quest, index) => (
           <MainMenuItem
             selected={index() === props.selectedQuest}
             onClick={() => props.onClickQuest(index())}
           >
-            {quest.id}
+            {quest.id || '<no id>'}
           </MainMenuItem>
         )}
       </For>
