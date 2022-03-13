@@ -9,6 +9,7 @@ type Props = {
   loadedJsonFiles: DeepReadonly<LoadedJsonFile[]>;
   selectedFile: null | number;
   onClickFile: (index: number) => void;
+  onCreateNewFile: () => void;
 };
 
 const QuestsFiles: Component<Props> = props => {
@@ -24,6 +25,9 @@ const QuestsFiles: Component<Props> = props => {
           </MainMenuItem>
         )}
       </For>
+      <div style={{ margin: '10px' }}>
+        <input onClick={() => props.onCreateNewFile()} type="button" value="Create new file..." />
+      </div>
     </MainMenu>
   );
 };

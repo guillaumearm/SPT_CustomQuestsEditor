@@ -1,4 +1,4 @@
-import { Component, createMemo, createSignal, For, Show } from 'solid-js';
+import { Component, createMemo, For } from 'solid-js';
 import { DeepReadonly, produce } from 'solid-js/store';
 import {
   ALL_DESCRIPTIVE_LOCATION,

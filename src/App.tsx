@@ -89,6 +89,10 @@ const App: Component = () => {
     return 0;
   });
 
+  const fileIsSelected = createMemo(() => {
+    return state.selections.file !== null;
+  });
+
   const updateQuest = createMemo(() => {
     const q = selectedQuest();
     const selectedFileIndex = state.selections.file;
@@ -149,12 +153,31 @@ const App: Component = () => {
       const savedQuestIndex = questIndex;
 
       setState('files', selectedFileIndex, 'data', quests => {
-        if (savedQuestIndex === nbQuests() - 1) {
-          setState('selections', 'quest', () => savedQuestIndex - 1);
+        if (savedQuestIndex === quests.length - 1) {
+          const newQuestIndex = savedQuestIndex === 0 ? null : savedQuestIndex - 1;
+          setState('selections', 'quest', () => newQuestIndex);
         }
         return remove(savedQuestIndex, 1, quests);
       });
     }
+  };
+
+  const removeQuestFile = () => {
+    const selectedFileIndex = state.selections.file;
+
+    if (selectedFileIndex !== null) {
+      setState('files', files => {
+        if (selectedFileIndex === files.length - 1) {
+          const newFileIndex = selectedFileIndex === 0 ? null : selectedFileIndex - 1;
+          setState('selections', 'file', () => newFileIndex);
+        }
+        return remove(selectedFileIndex, 1, files);
+      });
+    }
+  };
+
+  const createNewFile = () => {
+    setState('files', files => [...files, { name: 'file.json', data: [] }]);
   };
 
   const allQuestIds = createMemo(() => {
@@ -200,14 +223,16 @@ const App: Component = () => {
         }}
       />
       <QuestsFiles
+        onCreateNewFile={createNewFile}
         isDragging={isDragging}
         onClickFile={selectFile}
         loadedJsonFiles={state.files}
         selectedFile={state.selections.file}
       />
 
-      <Show when={state.selections.file !== null}>
+      <Show when={fileIsSelected()}>
         <QuestsList
+          onRemoveQuestFile={removeQuestFile}
           onCreateNewQuest={addEmptyQuest}
           onClickQuest={selectQuest}
           file={selectedFile()}
@@ -226,7 +251,7 @@ const App: Component = () => {
           updateQuest={updateQuest()!}
         />
       </Show>
-      <Show when={state.selections.file !== null}>
+      <Show when={fileIsSelected()}>
         <DownloadButton
           tabIndex={-1}
           loadedJsonFiles={state.files}

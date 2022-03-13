@@ -1,4 +1,4 @@
-import { Component, For } from 'solid-js';
+import { Component, For, Show } from 'solid-js';
 import { DeepReadonly } from 'solid-js/store';
 
 import { LoadedJsonFile } from '../../types';
@@ -9,6 +9,7 @@ type Props = {
   selectedQuest: null | number;
   onClickQuest: (index: number) => void;
   onCreateNewQuest: () => void;
+  onRemoveQuestFile: () => void;
 };
 
 const QuestsList: Component<Props> = props => {
@@ -29,6 +30,15 @@ const QuestsList: Component<Props> = props => {
       {props.children}
       <div style={{ margin: '10px' }}>
         <input onClick={() => props.onCreateNewQuest()} type="button" value="Create new quest..." />
+        <Show when={(props.file?.data ?? []).length === 0}>
+          <div>
+            <input
+              onClick={() => props.onRemoveQuestFile()}
+              type="button"
+              value="Remove quest file..."
+            />
+          </div>
+        </Show>
       </div>
     </MainMenu>
   );
