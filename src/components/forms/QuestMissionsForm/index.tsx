@@ -35,6 +35,22 @@ type QuestMissionCardProps = {
 };
 
 const QuestMissionCard: Component<QuestMissionCardProps> = props => {
+  const headerMissionJSX = createMemo(() => {
+    return (
+      <>
+        <h4 style={{ margin: 0, width: '90%', display: 'inline-block' }}>
+          {props.mission.type} mission
+        </h4>
+        <input
+          onClick={props.onRemoveMission}
+          type="button"
+          value="Remove"
+          style={{ top: '0px', float: 'right' }}
+        />
+      </>
+    );
+  });
+
   return (
     <div
       style={{
@@ -48,43 +64,54 @@ const QuestMissionCard: Component<QuestMissionCardProps> = props => {
           <MissionKillForm
             mission={props.mission as MissionKill}
             updateMission={props.updateMission as MissionUpdator<MissionKill>}
-            onRemoveMission={props.onRemoveMission}
-          />
+          >
+            {headerMissionJSX()}
+          </MissionKillForm>
         </Match>
         <Match when={props.mission.type === 'GiveItem'}>
           <MissionGiveItemForm
             mission={props.mission as MissionGiveItem}
             updateMission={props.updateMission as MissionUpdator<MissionGiveItem>}
             onRemoveMission={props.onRemoveMission}
-          />
+          >
+            {headerMissionJSX()}
+          </MissionGiveItemForm>
         </Match>
         <Match when={props.mission.type === 'PlaceItem'}>
           <MissionPlaceItemForm
             mission={props.mission as MissionPlaceItem}
             updateMission={props.updateMission as MissionUpdator<MissionPlaceItem>}
             onRemoveMission={props.onRemoveMission}
-          />
+          >
+            {headerMissionJSX()}
+          </MissionPlaceItemForm>
         </Match>
         <Match when={props.mission.type === 'PlaceBeacon'}>
           <MissionPlaceBeaconForm
             mission={props.mission as MissionPlaceBeacon}
             updateMission={props.updateMission as MissionUpdator<MissionPlaceBeacon>}
             onRemoveMission={props.onRemoveMission}
-          />
+          >
+            {headerMissionJSX()}
+          </MissionPlaceBeaconForm>
         </Match>
         <Match when={props.mission.type === 'PlaceSignalJammer'}>
           <MissionPlaceSignalJammerForm
             mission={props.mission as MissionPlaceSignalJammer}
             updateMission={props.updateMission as MissionUpdator<MissionPlaceSignalJammer>}
             onRemoveMission={props.onRemoveMission}
-          />
+          >
+            {headerMissionJSX()}
+          </MissionPlaceSignalJammerForm>
         </Match>
         <Match when={props.mission.type === 'VisitPlace'}>
           <MissionVisitPlaceForm
             mission={props.mission as MissionVisitPlace}
             updateMission={props.updateMission as MissionUpdator<MissionVisitPlace>}
             onRemoveMission={props.onRemoveMission}
-          />
+          >
+            {headerMissionJSX()}
+          </MissionVisitPlaceForm>
         </Match>
       </Switch>
     </div>
