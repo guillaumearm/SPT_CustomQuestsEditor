@@ -114,6 +114,10 @@ const App: Component = () => {
 
     if (selectedFileIndex !== null) {
       setState('files', selectedFileIndex, 'data', quests => [...quests, createEmptyQuest()]);
+
+      if (state.selections.quest === null) {
+        setState('selections', 'quest', 0);
+      }
     }
   };
 
@@ -176,8 +180,18 @@ const App: Component = () => {
     }
   };
 
+  const editFilename = (newFilename: string, index: number) => {
+    if (newFilename) {
+      setState('files', index, 'name', `${newFilename}.json`);
+    }
+  };
+
   const createNewFile = () => {
-    setState('files', files => [...files, { name: 'file.json', data: [] }]);
+    setState('files', files => [...files, { name: 'new_quest_file.json', data: [] }]);
+
+    if (state.selections.file === null) {
+      setState('selections', 'file', 0);
+    }
   };
 
   const allQuestIds = createMemo(() => {
@@ -223,12 +237,21 @@ const App: Component = () => {
         }}
       />
       <QuestsFiles
+        onEditFilename={editFilename}
         onCreateNewFile={createNewFile}
         isDragging={isDragging}
         onClickFile={selectFile}
         loadedJsonFiles={state.files}
         selectedFile={state.selections.file}
-      />
+      >
+        <Show when={fileIsSelected()}>
+          <DownloadButton
+            tabIndex={-1}
+            loadedJsonFiles={state.files}
+            selectedQuestFile={state.selections.file}
+          />
+        </Show>
+      </QuestsFiles>
 
       <Show when={fileIsSelected()}>
         <QuestsList
@@ -249,13 +272,6 @@ const App: Component = () => {
           questIndex={getSelectedQuestIndex()}
           quest={selectedQuest()!}
           updateQuest={updateQuest()!}
-        />
-      </Show>
-      <Show when={fileIsSelected()}>
-        <DownloadButton
-          tabIndex={-1}
-          loadedJsonFiles={state.files}
-          selectedQuestFile={state.selections.file}
         />
       </Show>
     </div>

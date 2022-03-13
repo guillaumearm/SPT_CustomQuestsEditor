@@ -1,8 +1,19 @@
+import { dropLast } from 'ramda';
 import { Accessor, Component, For } from 'solid-js';
 import { DeepReadonly } from 'solid-js/store';
 
 import { LoadedJsonFile } from '../../types';
 import { MainMenu, MainMenuItem } from '../MainMenu';
+
+const removeJsonExt = (fileName: string): string => {
+  const splitted = fileName.split('.json');
+
+  if (splitted.length >= 2) {
+    return dropLast(1, splitted).join('.json');
+  }
+
+  return fileName;
+};
 
 type Props = {
   isDragging: Accessor<boolean>;
@@ -10,6 +21,7 @@ type Props = {
   selectedFile: null | number;
   onClickFile: (index: number) => void;
   onCreateNewFile: () => void;
+  onEditFilename: (newFilename: string, index: number) => void;
 };
 
 const QuestsFiles: Component<Props> = props => {
@@ -18,16 +30,19 @@ const QuestsFiles: Component<Props> = props => {
       <For each={props.loadedJsonFiles}>
         {(loadedJsonFile, index) => (
           <MainMenuItem
+            index={index()}
+            enableEdition={true}
             selected={index() === props.selectedFile}
             onClick={() => props.onClickFile(index())}
-          >
-            {loadedJsonFile.name}
-          </MainMenuItem>
+            onEditEnter={props.onEditFilename}
+            text={removeJsonExt(loadedJsonFile.name)}
+          />
         )}
       </For>
       <div style={{ margin: '10px' }}>
         <input onClick={() => props.onCreateNewFile()} type="button" value="Create new file..." />
       </div>
+      {props.children}
     </MainMenu>
   );
 };

@@ -18,12 +18,12 @@ const QuestsList: Component<Props> = props => {
       <For each={props.file?.data}>
         {(quest, index) => (
           <MainMenuItem
+            index={index()}
             disabled={Boolean(quest.disabled) || quest.id === ''}
             selected={index() === props.selectedQuest}
             onClick={() => props.onClickQuest(index())}
-          >
-            {quest.id || '<no id>'}
-          </MainMenuItem>
+            text={quest.id || '<no id>'}
+          />
         )}
       </For>
 

@@ -30,7 +30,7 @@ export const DownloadButton: Component<DownloadButtonProps> = props => {
 
   return (
     <a style={{}} download={fileName()} href={fileData()}>
-      <button tabIndex={props.tabIndex} type="button">{`Download ${fileName()} file`}</button>
+      <button tabIndex={props.tabIndex} type="button">{`Download ${fileName()}`}</button>
     </a>
   );
 };

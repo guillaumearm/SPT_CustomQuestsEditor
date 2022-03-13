@@ -68,25 +68,6 @@ const QuestItemRewardsList: Component<ListProps> = props => {
         value="Add item"
         disabled={addButtonDisabled()}
       />
-      {/* <Show when={adding()}>
-        <QuestItemInput
-          onCounterChanged={console.log}
-          // onCounterChanged={v => props.updateRewards(r => ({ ...r, [itemId]: v }))}
-          fieldName=""
-          uniqQuestId={`${props.uniqQuestId}_adding`}
-          value={''}
-          onChange={
-            newId => console.log('on change new: ', newId)
-            // props.updateRewards(
-            //   produce(r => {
-            //     const count = r[itemId];
-            //     delete r[itemId];
-            //     r[newId] = count;
-            //   }),
-            // )
-          }
-        />
-      </Show> */}
       <For each={allItemIds()}>
         {(itemId, i) => (
           <QuestItemInput
@@ -114,13 +95,6 @@ const QuestItemRewardsList: Component<ListProps> = props => {
           />
         )}
       </For>
-      {/* <QuestItemInput
-        onCounterChanged={console.log}
-        fieldName=""
-        uniqQuestId={props.uniqQuestId}
-        value={testValue()}
-        onChange={v => setTestvalue(v)}
-      /> */}
     </div>
   );
 };

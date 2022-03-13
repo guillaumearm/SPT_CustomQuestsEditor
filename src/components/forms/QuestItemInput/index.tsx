@@ -1,8 +1,5 @@
 import { take } from 'ramda';
 import { Component, createEffect, createMemo, createSignal, For, Show } from 'solid-js';
-// import dbItems from '../../../assets/db/templates/items.json';
-
-// import enLocales from '../../../assets/db/locales/global/en.json';
 
 let ALL_TEMPLATES: (readonly [string, { Name: string }])[] = [];
 let LOCALES_TEMPLATES: Record<string, { Name: string } | undefined> = {};
@@ -25,8 +22,6 @@ type Props = {
   count?: number;
   onCounterChanged?: (c: number) => void;
 };
-
-// console.log(dbItems, enLocales);
 
 export const QuestItemInput: Component<Props> = props => {
   const [searchEnabled, setSearchEnabled] = createSignal(false);

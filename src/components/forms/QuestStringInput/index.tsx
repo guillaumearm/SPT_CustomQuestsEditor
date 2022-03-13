@@ -20,7 +20,6 @@ export const QuestStringInput: Component<Props> = props => {
     if (questId !== props.uniqQuestId && typeof props.questString === 'object') {
       const localeName = (Object.keys(props.questString)[0] as LocaleName) ?? null;
       if (localeName) {
-        // console.log('set locale because fx!');
         setCurrentLocale(localeName);
       }
     }
