@@ -1,6 +1,6 @@
 import { Component, createEffect, createMemo, createSignal, JSX, Match, Switch } from 'solid-js';
 
-const liStyle = (selected = false, disabled = false) => {
+const liStyle = (selected = false, disabled = false): JSX.CSSProperties => {
   const getBackgroundColor = () => {
     if (disabled && selected) {
       return '#606060';
@@ -30,6 +30,7 @@ const liStyle = (selected = false, disabled = false) => {
     'margin-bottom': '1px',
     border: '1px solid grey',
     'text-align': 'center',
+    'overflow-x': 'scroll',
     cursor: 'pointer',
     'background-color': getBackgroundColor(),
     color: getColor(),
@@ -62,9 +63,9 @@ export const MainMenu: Component<Props> = props => {
       </div>
       <ul
         style={{
-          margin: 0,
           padding: 0,
-          'overflow-x': 'hidden',
+          'padding-bottom': '20px',
+
           'white-space': 'nowrap',
         }}
       >
@@ -131,9 +132,7 @@ export const MainMenuItem: Component<ItemProps> = props => {
           />
           <input onClick={() => editionOk()} style={{ width: '15%' }} type="button" value="Ok" />
         </Match>
-        <Match when={!editable()}>
-          <span>{props.text}</span>
-        </Match>
+        <Match when={!editable()}>{props.text}</Match>
       </Switch>
     </li>
   );
