@@ -108,6 +108,7 @@ type Props = {
   onMoveUp?: () => void;
   onMoveDown?: () => void;
   onRemove?: () => void;
+  onDupliacteQuest?: () => void;
 };
 
 export const QuestForm: Component<Props> = props => {
@@ -148,6 +149,12 @@ export const QuestForm: Component<Props> = props => {
           style={{ margin: '0px' }}
           type="button"
           value="DOWN"
+        />
+        <input
+          onClick={props.onDupliacteQuest}
+          style={{ margin: '0px' }}
+          type="button"
+          value="Duplicate quest"
         />
         <input
           onClick={props.onRemove}

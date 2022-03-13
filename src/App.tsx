@@ -1,4 +1,4 @@
-import { move, remove } from 'ramda';
+import { dropLast, equals, move, remove } from 'ramda';
 import { Component, createMemo, createSignal, Show } from 'solid-js';
 import { createStore, DeepReadonly } from 'solid-js/store';
 
@@ -56,6 +56,62 @@ const getAllQuestIds = (files: DeepReadonly<LoadedJsonFile[]>): string[] => {
   });
 
   return Object.keys(result);
+};
+
+// Used for quest duplication
+
+const getQuestNum = (questId: string) => {
+  const splitted = questId.split('_');
+  const lastString = splitted[splitted.length - 1];
+
+  if (!equals(NaN, Number(lastString))) {
+    return Number(lastString);
+  }
+  return null;
+};
+
+const getQuestIdWithoutNum = (questId: string) => {
+  const splitted = questId.split('_');
+  const lastString = splitted[splitted.length - 1];
+
+  if (!equals(NaN, Number(lastString))) {
+    return dropLast(1, splitted).join('_');
+  }
+  return null;
+};
+
+const getNewId = (id: string, questIds: string[]) => {
+  let n = 0;
+  const splitted = id.split('_');
+
+  const lastString = splitted[splitted.length - 1];
+
+  if (!equals(NaN, Number(lastString))) {
+    const questIdWithoutNum = dropLast(1, splitted).join('_');
+    n = Number(lastString);
+
+    questIds.forEach(questId => {
+      if (getQuestIdWithoutNum(questId) === questIdWithoutNum) {
+        const num = getQuestNum(questId);
+        if (num !== null && num > n) {
+          n = num;
+        }
+      }
+    });
+
+    return questIdWithoutNum ? `${questIdWithoutNum}_${n + 1}` : String(n + 1);
+  } else {
+    questIds.forEach(questId => {
+      if (getQuestIdWithoutNum(questId) === id) {
+        const num = getQuestNum(questId);
+        if (num !== null && num >= n) {
+          n = num + 1;
+        }
+      }
+    });
+  }
+
+  return id ? `${id}_${n}` : String(n);
 };
 
 const App: Component = () => {
@@ -166,6 +222,24 @@ const App: Component = () => {
     }
   };
 
+  const duplicateQuest = () => {
+    const questIndex = getSelectedQuestIndex();
+    const selectedFileIndex = state.selections.file;
+
+    if (selectedFileIndex !== null && questIndex !== null) {
+      const quest = state.files[selectedFileIndex].data[questIndex];
+      if (quest) {
+        const allQuestIds = state.files[selectedFileIndex].data.map(q => q.id);
+        const newId = getNewId(quest.id, allQuestIds);
+
+        setState('files', selectedFileIndex, 'data', quests => [
+          ...quests,
+          { ...quest, id: newId },
+        ]);
+      }
+    }
+  };
+
   const removeQuestFile = () => {
     const selectedFileIndex = state.selections.file;
 
@@ -268,6 +342,7 @@ const App: Component = () => {
           onMoveUp={moveUp}
           onMoveDown={moveDown}
           onRemove={removeQuest}
+          onDupliacteQuest={duplicateQuest}
           allQuestIds={allQuestIds()}
           questIndex={getSelectedQuestIndex()}
           quest={selectedQuest()!}
