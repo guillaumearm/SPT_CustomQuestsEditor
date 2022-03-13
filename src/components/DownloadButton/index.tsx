@@ -1,6 +1,6 @@
 import { Component, createMemo } from 'solid-js';
 import { DeepReadonly } from 'solid-js/store';
-import { LoadedJsonFile } from '../../types';
+import { LoadedJsonFile, QuestData } from '../../types';
 
 type DownloadButtonProps = {
   tabIndex?: number;
@@ -8,15 +8,25 @@ type DownloadButtonProps = {
   selectedQuestFile: null | number;
 };
 
-const convertObjectToDataString = (data: object) => {
-  return 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(data, undefined, 4));
+const ignoreQuestsWithEmptyId = (data: DeepReadonly<QuestData[]>): DeepReadonly<QuestData[]> => {
+  return data.filter(q => {
+    return q.id !== '';
+  });
+};
+
+const convertObjectToDataString = (data: DeepReadonly<QuestData[]>) => {
+  const filteredData = ignoreQuestsWithEmptyId(data);
+
+  return (
+    'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(filteredData, undefined, 4))
+  );
 };
 
 export const DownloadButton: Component<DownloadButtonProps> = props => {
   const file = createMemo(() => props.loadedJsonFiles[props.selectedQuestFile ?? -1]);
 
   const fileName = createMemo(() => file()?.name ?? '');
-  const fileData = createMemo(() => convertObjectToDataString(file()?.data ?? {}));
+  const fileData = createMemo(() => convertObjectToDataString(file()?.data ?? []));
 
   return (
     <a style={{}} download={fileName()} href={fileData()}>

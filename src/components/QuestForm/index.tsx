@@ -1,5 +1,5 @@
-import { Component, createMemo } from 'solid-js';
-import { DeepReadonly } from 'solid-js/store';
+import { Component, createMemo, createSignal, For, Show } from 'solid-js';
+import { DeepReadonly, produce } from 'solid-js/store';
 import {
   ALL_DESCRIPTIVE_LOCATION,
   DescriptiveLocation,
@@ -15,6 +15,7 @@ import { QuestIdsForm } from '../forms/QuestIdsForm';
 import { ALL_QUEST_TYPES } from '../../helpers/validation';
 import { QuestSimpleDropdown } from '../forms/QuestSimpleDropdown';
 import { ALL_QUESTS_IMAGES } from '../../helpers/all_quests_images';
+import { QuestItemInput } from '../forms/QuestItemInput';
 
 export const ALL_TRADERS = [
   'prapor',
@@ -27,11 +28,112 @@ export const ALL_TRADERS = [
   'jaeger',
 ];
 
+type ItemRewards = Record<string, number>;
+
+type ListProps = {
+  updateRewards: (fn: (r: ItemRewards) => ItemRewards) => void;
+  uniqQuestId: string;
+  rewards: ItemRewards;
+};
+
+const QuestItemRewardsList: Component<ListProps> = props => {
+  const addButtonDisabled = createMemo(() => {
+    return props.rewards[''] !== undefined;
+  });
+
+  const allItemIds = createMemo(() => {
+    return Object.keys(props.rewards);
+  });
+
+  return (
+    <div style={{ padding: '15px' }}>
+      <label
+        style={{
+          display: 'inline-block',
+          // float: 'left',
+          clear: 'left',
+          width: '180px',
+          'text-align': 'right',
+          'margin-right': '10px',
+          'margin-bottom': '10px',
+        }}
+      >
+        {`rewards.items: `}
+      </label>
+      <input
+        onClick={() => {
+          props.updateRewards(r => ({ ...r, ['']: 1 }));
+        }}
+        type="button"
+        value="Add item"
+        disabled={addButtonDisabled()}
+      />
+      {/* <Show when={adding()}>
+        <QuestItemInput
+          onCounterChanged={console.log}
+          // onCounterChanged={v => props.updateRewards(r => ({ ...r, [itemId]: v }))}
+          fieldName=""
+          uniqQuestId={`${props.uniqQuestId}_adding`}
+          value={''}
+          onChange={
+            newId => console.log('on change new: ', newId)
+            // props.updateRewards(
+            //   produce(r => {
+            //     const count = r[itemId];
+            //     delete r[itemId];
+            //     r[newId] = count;
+            //   }),
+            // )
+          }
+        />
+      </Show> */}
+      <For each={allItemIds()}>
+        {(itemId, i) => (
+          <QuestItemInput
+            index={i()}
+            count={props.rewards[itemId] ?? 1}
+            onCounterChanged={v => props.updateRewards(r => ({ ...r, [itemId]: v }))}
+            fieldName=""
+            uniqQuestId={`${props.uniqQuestId}_${i()}`}
+            value={itemId}
+            onChange={newId => {
+              props.updateRewards(
+                produce(r => {
+                  if (newId === itemId) {
+                    return;
+                  }
+                  if (r[newId]) {
+                    r[newId] += r[itemId];
+                  } else {
+                    r[newId] = r[itemId];
+                  }
+                  delete r[itemId];
+                }),
+              );
+            }}
+          />
+        )}
+      </For>
+      {/* <QuestItemInput
+        onCounterChanged={console.log}
+        fieldName=""
+        uniqQuestId={props.uniqQuestId}
+        value={testValue()}
+        onChange={v => setTestvalue(v)}
+      /> */}
+    </div>
+  );
+};
+
 type Props = {
+  nbQuests: number;
   allQuestIds: string[];
   questIndex: number | null;
   quest: DeepReadonly<QuestData>;
   updateQuest: QuestUpdator;
+  onMoveUp?: () => void;
+  onMoveDown?: () => void;
+  onRemove?: () => void;
 };
 
 export const QuestForm: Component<Props> = props => {
@@ -39,20 +141,48 @@ export const QuestForm: Component<Props> = props => {
     return `${props.quest.id}_${props.questIndex}`;
   });
 
+  const rewardsItems = createMemo(() => {
+    return props.quest.rewards?.items ?? {};
+  });
+
   return (
     <div
+      id="quest_form"
       style={{
         border: '1px solid black',
         margin: '1px',
         padding: '10px',
-        width: '50%',
+        width: '60%',
         height: '400px',
         'overflow-y': 'scroll',
         'background-color': 'lightgrey',
         float: 'left',
       }}
     >
-      <h4 style={{ 'text-align': 'center' }}>Quest configuration</h4>
+      <div style={{ padding: '10px', 'background-color': 'grey' }}>
+        <h4 style={{ margin: 0, 'text-align': 'center' }}>Quest configuration</h4>
+        <input
+          disabled={props.questIndex === 0}
+          onClick={props.onMoveUp}
+          style={{ margin: '0px' }}
+          type="button"
+          value="UP"
+        />
+        <input
+          disabled={props.questIndex === props.nbQuests - 1}
+          onClick={props.onMoveDown}
+          style={{ margin: '0px' }}
+          type="button"
+          value="DOWN"
+        />
+        <input
+          onClick={props.onRemove}
+          style={{ float: 'right', margin: '0px' }}
+          type="button"
+          value="Remove quest"
+        />
+      </div>
+
       <form onSubmit={() => {}} style={{ 'margin-left': '21px' }}>
         <QuestDisabledInput formIndex={2} {...props} />
         <QuestSimpleInput formIndex={4} {...props} fieldName="id" />
@@ -123,6 +253,16 @@ export const QuestForm: Component<Props> = props => {
           {...props}
           uniqQuestId={uniqQuestId()}
           fieldName="unlock_on_quest_start"
+        />
+        <QuestItemRewardsList
+          updateRewards={fn =>
+            props.updateQuest(q => ({
+              ...q,
+              rewards: { ...q.rewards, items: { ...fn(q.rewards?.items ?? {}) } },
+            }))
+          }
+          uniqQuestId={uniqQuestId()}
+          rewards={rewardsItems()}
         />
       </form>
     </div>

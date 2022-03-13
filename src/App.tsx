@@ -1,3 +1,4 @@
+import { move, remove } from 'ramda';
 import { Component, createMemo, createSignal, Show } from 'solid-js';
 import { createStore, DeepReadonly } from 'solid-js/store';
 
@@ -13,6 +14,11 @@ import QuestsList from './components/QuestsList';
 import { checkQuestJsonData } from './helpers/validation';
 
 import { LoadedJsonFile, QuestUpdator } from './types';
+
+const createEmptyQuest = () => ({
+  id: '',
+  trader_id: 'prapor',
+});
 
 const greyColor = '#737373';
 const lightGreyColor = '#b3b3b3';
@@ -74,6 +80,15 @@ const App: Component = () => {
     return undefined;
   });
 
+  const nbQuests = createMemo(() => {
+    const file = selectedFile();
+
+    if (file) {
+      return file.data.length;
+    }
+    return 0;
+  });
+
   const updateQuest = createMemo(() => {
     const q = selectedQuest();
     const selectedFileIndex = state.selections.file;
@@ -90,6 +105,58 @@ const App: Component = () => {
     return undefined;
   });
 
+  const addEmptyQuest = () => {
+    const selectedFileIndex = state.selections.file;
+
+    if (selectedFileIndex !== null) {
+      setState('files', selectedFileIndex, 'data', quests => [...quests, createEmptyQuest()]);
+    }
+  };
+
+  const moveUp = () => {
+    const questIndex = getSelectedQuestIndex();
+    const selectedFileIndex = state.selections.file;
+
+    if (selectedFileIndex !== null && questIndex !== null && questIndex > 0) {
+      const savedQuestIndex = questIndex;
+
+      setState('files', selectedFileIndex, 'data', quests => {
+        setState('selections', 'quest', () => savedQuestIndex - 1);
+        return move(questIndex, questIndex - 1)(quests);
+      });
+    }
+  };
+
+  const moveDown = () => {
+    const questIndex = getSelectedQuestIndex();
+    const selectedFileIndex = state.selections.file;
+
+    if (selectedFileIndex !== null && questIndex !== null && questIndex < nbQuests() - 1) {
+      const savedQuestIndex = questIndex;
+
+      setState('files', selectedFileIndex, 'data', quests => {
+        setState('selections', 'quest', () => savedQuestIndex + 1);
+        return move(questIndex, questIndex + 1)(quests);
+      });
+    }
+  };
+
+  const removeQuest = () => {
+    const questIndex = getSelectedQuestIndex();
+    const selectedFileIndex = state.selections.file;
+
+    if (selectedFileIndex !== null && questIndex !== null) {
+      const savedQuestIndex = questIndex;
+
+      setState('files', selectedFileIndex, 'data', quests => {
+        if (savedQuestIndex === nbQuests() - 1) {
+          setState('selections', 'quest', () => savedQuestIndex - 1);
+        }
+        return remove(savedQuestIndex, 1, quests);
+      });
+    }
+  };
+
   const allQuestIds = createMemo(() => {
     return getAllQuestIds(state.files);
   });
@@ -105,6 +172,7 @@ const App: Component = () => {
   return (
     <div
       style={{
+        'overflow-x': 'scroll',
         'background-color': isDragging() ? greyColor : lightGreyColor,
         height: '100vh',
       }}
@@ -140,6 +208,7 @@ const App: Component = () => {
 
       <Show when={state.selections.file !== null}>
         <QuestsList
+          onCreateNewQuest={addEmptyQuest}
           onClickQuest={selectQuest}
           file={selectedFile()}
           selectedQuest={state.selections.quest}
@@ -147,6 +216,10 @@ const App: Component = () => {
       </Show>
       <Show when={selectedQuest() !== undefined && updateQuest()! !== undefined}>
         <QuestForm
+          nbQuests={nbQuests()}
+          onMoveUp={moveUp}
+          onMoveDown={moveDown}
+          onRemove={removeQuest}
           allQuestIds={allQuestIds()}
           questIndex={getSelectedQuestIndex()}
           quest={selectedQuest()!}
