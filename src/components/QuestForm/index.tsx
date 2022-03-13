@@ -16,6 +16,7 @@ import { ALL_QUEST_TYPES } from '../../helpers/validation';
 import { QuestSimpleDropdown } from '../forms/QuestSimpleDropdown';
 import { ALL_QUESTS_IMAGES } from '../../helpers/all_quests_images';
 import { QuestItemRewardsList } from '../forms/QuestItemRewardsList';
+import { QuestXpRewards } from '../forms/QuestXpRewards';
 
 export const ALL_TRADERS = [
   'prapor',
@@ -163,6 +164,10 @@ export const QuestForm: Component<Props> = props => {
           {...props}
           uniqQuestId={uniqQuestId()}
           fieldName="unlock_on_quest_start"
+        />
+        <QuestXpRewards
+          xp={props.quest.rewards?.xp ?? 0}
+          setXp={xp => props.updateQuest(q => ({ ...q, rewards: { ...q.rewards, xp } }))}
         />
         <QuestItemRewardsList
           updateRewards={fn =>
