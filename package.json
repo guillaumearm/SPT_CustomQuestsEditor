@@ -13,6 +13,7 @@
     "prettier:check": "prettier --check .",
     "test:all": "npm run lint:all && yarn run tsc && npm run build",
     "tsc": "tsc -p . --noEmit",
+    "preversion": "npm run test:all",
     "clean": "rimraf dist"
   },
   "license": "MIT",
