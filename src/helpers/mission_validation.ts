@@ -1,7 +1,18 @@
 import { QuestMission, KillTarget } from '../types';
 import { assertValidQuestString } from './queststring_validation';
 
-const VALID_MISSION_TYPES = [
+const MISSION_TYPES = {
+  Kill: true,
+  GiveItem: true,
+  PlaceItem: true,
+  PlaceBeacon: true,
+  PlaceSignalJammer: true,
+  VisitPlace: true,
+};
+
+export type MissionType = keyof typeof MISSION_TYPES;
+
+export const VALID_MISSION_TYPES: MissionType[] = [
   'Kill',
   'GiveItem',
   'PlaceItem',

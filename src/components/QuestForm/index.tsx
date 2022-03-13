@@ -16,7 +16,8 @@ import { ALL_QUEST_TYPES } from '../../helpers/validation';
 import { QuestSimpleDropdown } from '../forms/QuestSimpleDropdown';
 import { ALL_QUESTS_IMAGES } from '../../helpers/all_quests_images';
 import { QuestItemRewardsList } from '../forms/QuestItemRewardsList';
-import { QuestXpRewards } from '../forms/QuestXpRewards';
+import { QuestNumberInput } from '../forms/QuestNumberInput';
+import { QuestMissionsForm } from '../forms/QuestMissionsForm';
 
 export const ALL_TRADERS = [
   'prapor',
@@ -165,9 +166,10 @@ export const QuestForm: Component<Props> = props => {
           uniqQuestId={uniqQuestId()}
           fieldName="unlock_on_quest_start"
         />
-        <QuestXpRewards
-          xp={props.quest.rewards?.xp ?? 0}
-          setXp={xp => props.updateQuest(q => ({ ...q, rewards: { ...q.rewards, xp } }))}
+        <QuestNumberInput
+          fieldName="rewards.xp"
+          value={props.quest.rewards?.xp ?? 0}
+          setValue={xp => props.updateQuest(q => ({ ...q, rewards: { ...q.rewards, xp } }))}
         />
         <QuestItemRewardsList
           updateRewards={fn =>
@@ -179,6 +181,8 @@ export const QuestForm: Component<Props> = props => {
           uniqQuestId={uniqQuestId()}
           rewards={rewardsItems()}
         />
+        <h2>Missions</h2>
+        <QuestMissionsForm quest={props.quest} updateQuest={props.updateQuest} />
       </form>
     </div>
   );

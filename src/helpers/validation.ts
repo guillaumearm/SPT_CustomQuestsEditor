@@ -18,6 +18,13 @@ const DESCRIPTIVE_LOCATION_ALIASES: Record<string, string> = {
   '5704e3c2d2720bac5b8b4567': 'woods',
 };
 
+const LOCATION_ALIASES: Record<string, string> = {
+  '': 'any',
+  bigmap: 'customs',
+  rezervbase: 'reserve',
+  labs: 'laboratory',
+};
+
 const error = (msg: string) => new Error(msg);
 
 const isValidQuestType = (str: string): str is QuestType => {
@@ -141,8 +148,26 @@ export const checkQuestJsonData = (givenData: any): QuestData[] => {
 
   const newData = data.map(questData => {
     const descriptive_location: string | undefined = questData.descriptive_location;
+    const missions = questData.missions ?? [];
+
     return {
       ...questData,
+      missions: missions.map((m: any) => {
+        // set locations aliases on missions
+        if (m.locations && m.locations.length) {
+          return {
+            ...m,
+            locations: m.locations.map((locationName: string) => {
+              if (LOCATION_ALIASES[locationName]) {
+                return LOCATION_ALIASES[locationName];
+              }
+              return locationName;
+            }),
+          };
+        }
+        return m;
+      }),
+      // set descriptive_location aliases
       descriptive_location:
         DESCRIPTIVE_LOCATION_ALIASES[descriptive_location ?? ''] ?? descriptive_location,
     };

@@ -1,12 +1,12 @@
 import { Component } from 'solid-js';
 
 type Props = {
-  xp: number;
-  setXp: (xp: number) => void;
+  value: number;
+  setValue: (xp: number) => void;
+  fieldName: string;
 };
 
-export const QuestXpRewards: Component<Props> = props => {
-  void props;
+export const QuestNumberInput: Component<Props> = props => {
   return (
     <div style={{ padding: '15px' }}>
       <label
@@ -18,13 +18,13 @@ export const QuestXpRewards: Component<Props> = props => {
           'text-align': 'right',
           'margin-right': '10px',
         }}
-        for={`form_rewards_xp`}
+        for={`form_${props.fieldName}`}
       >
-        rewards.xp
+        {props.fieldName}
       </label>
       <input
-        onInput={e => props.setXp(Number(e.currentTarget.value))}
-        value={props.xp}
+        onInput={e => props.setValue(Number(e.currentTarget.value))}
+        value={props.value}
         type="number"
       />
     </div>

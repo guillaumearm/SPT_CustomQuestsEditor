@@ -12,6 +12,23 @@ const ALL_DESCRIPTIVE_LOCATION_OBJ = {
   woods: true,
 };
 
+const ALL_LOCATIONS_OBJ = {
+  any: true,
+  customs: true,
+  factory: true, // night and day
+  factory4_day: true, // day only
+  factory4_night: true, // night only
+  laboratory: true,
+  interchange: true,
+  lighthouse: true,
+  reserve: true,
+  shoreline: true,
+  woods: true,
+};
+
+export const ALL_LOCATIONS = Object.keys(ALL_DESCRIPTIVE_LOCATION_OBJ);
+export type PossibleLocation = keyof typeof ALL_LOCATIONS_OBJ;
+
 export const ALL_DESCRIPTIVE_LOCATION = Object.keys(ALL_DESCRIPTIVE_LOCATION_OBJ);
 
 export type DescriptiveLocation = keyof typeof ALL_DESCRIPTIVE_LOCATION_OBJ;
@@ -45,7 +62,7 @@ export type KillTarget = 'Savage' | 'AnyPmc' | 'Usec' | 'Bear';
 export type MissionKill = {
   type: 'Kill';
   target?: KillTarget;
-  locations?: string[]; // TODO aliases conversion
+  locations?: PossibleLocation[];
   count?: number;
   message?: QuestString;
 };
