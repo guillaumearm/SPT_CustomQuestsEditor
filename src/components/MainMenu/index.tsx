@@ -52,7 +52,7 @@ export const MainMenu: Component<Props> = props => {
         margin: '1px',
         padding: '10px',
         width: '15%',
-        height: '400px',
+        height: '90%',
         'overflow-y': 'scroll',
         'background-color': props.isDragging ? '#505050' : 'lightgrey',
         float: 'left',

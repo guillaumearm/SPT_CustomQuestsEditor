@@ -127,7 +127,7 @@ export const QuestForm: Component<Props> = props => {
         margin: '1px',
         padding: '10px',
         width: '60%',
-        height: '400px',
+        height: '90%',
         'overflow-y': 'scroll',
         'background-color': 'lightgrey',
         float: 'left',

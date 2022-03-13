@@ -1,3 +1,4 @@
+import { pipe } from 'ramda';
 import { Component, createMemo } from 'solid-js';
 import { DeepReadonly } from 'solid-js/store';
 import { LoadedJsonFile, QuestData } from '../../types';
@@ -14,8 +15,32 @@ const ignoreQuestsWithEmptyId = (data: DeepReadonly<QuestData[]>): DeepReadonly<
   });
 };
 
+const ignoreRewardsItemWithEmptyId = (
+  data: DeepReadonly<QuestData[]>,
+): DeepReadonly<QuestData[]> => {
+  return data.map(quest => {
+    if (quest.rewards && quest.rewards.items) {
+      const newItems: Record<string, number> = {};
+
+      const items = quest.rewards.items;
+      Object.keys(items).forEach(itemId => {
+        if (itemId !== '') {
+          newItems[itemId] = items[itemId];
+        }
+      });
+
+      return { ...quest, rewards: { ...quest.rewards, items: newItems } };
+    }
+    return quest;
+  });
+};
+
+const filterData = (data: DeepReadonly<QuestData[]>): DeepReadonly<QuestData[]> => {
+  return pipe(ignoreRewardsItemWithEmptyId, ignoreQuestsWithEmptyId)(data);
+};
+
 const convertObjectToDataString = (data: DeepReadonly<QuestData[]>) => {
-  const filteredData = ignoreQuestsWithEmptyId(data);
+  const filteredData = filterData(data);
 
   return (
     'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(filteredData, undefined, 4))
