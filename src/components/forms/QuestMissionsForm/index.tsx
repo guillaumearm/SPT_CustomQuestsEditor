@@ -31,6 +31,7 @@ type Props = {
 type QuestMissionCardProps = {
   mission: DeepReadonly<QuestMission>;
   updateMission: MissionUpdator;
+  onRemoveMission: () => void;
 };
 
 const QuestMissionCard: Component<QuestMissionCardProps> = props => {
@@ -47,36 +48,42 @@ const QuestMissionCard: Component<QuestMissionCardProps> = props => {
           <MissionKillForm
             mission={props.mission as MissionKill}
             updateMission={props.updateMission as MissionUpdator<MissionKill>}
+            onRemoveMission={props.onRemoveMission}
           />
         </Match>
         <Match when={props.mission.type === 'GiveItem'}>
           <MissionGiveItemForm
             mission={props.mission as MissionGiveItem}
             updateMission={props.updateMission as MissionUpdator<MissionGiveItem>}
+            onRemoveMission={props.onRemoveMission}
           />
         </Match>
         <Match when={props.mission.type === 'PlaceItem'}>
           <MissionPlaceItemForm
             mission={props.mission as MissionPlaceItem}
             updateMission={props.updateMission as MissionUpdator<MissionPlaceItem>}
+            onRemoveMission={props.onRemoveMission}
           />
         </Match>
         <Match when={props.mission.type === 'PlaceBeacon'}>
           <MissionPlaceBeaconForm
             mission={props.mission as MissionPlaceBeacon}
             updateMission={props.updateMission as MissionUpdator<MissionPlaceBeacon>}
+            onRemoveMission={props.onRemoveMission}
           />
         </Match>
         <Match when={props.mission.type === 'PlaceSignalJammer'}>
           <MissionPlaceSignalJammerForm
             mission={props.mission as MissionPlaceSignalJammer}
             updateMission={props.updateMission as MissionUpdator<MissionPlaceSignalJammer>}
+            onRemoveMission={props.onRemoveMission}
           />
         </Match>
         <Match when={props.mission.type === 'VisitPlace'}>
           <MissionVisitPlaceForm
             mission={props.mission as MissionVisitPlace}
             updateMission={props.updateMission as MissionUpdator<MissionVisitPlace>}
+            onRemoveMission={props.onRemoveMission}
           />
         </Match>
       </Switch>
@@ -88,6 +95,11 @@ export const QuestMissionsForm: Component<Props> = props => {
   const missions = createMemo<DeepReadonly<QuestMission[]>>(() => {
     return props.quest.missions ?? [];
   });
+
+  const onRemoveMission = (indexMission: number) => {
+    console.log(indexMission);
+  };
+
   return (
     <div style={{ padding: '15px' }}>
       <input disabled={true} type="button" value="Add a mission..." />
@@ -96,6 +108,7 @@ export const QuestMissionsForm: Component<Props> = props => {
           return (
             <div style={{ padding: '15px', 'background-color': 'grey' }}>
               <QuestMissionCard
+                onRemoveMission={() => onRemoveMission(index())}
                 updateMission={fn => {
                   return props.updateQuest(q => {
                     const missions = q.missions ?? [];

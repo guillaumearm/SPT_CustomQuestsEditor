@@ -6,6 +6,7 @@ import { MissionUpdator } from './types';
 type Props = {
   mission: DeepReadonly<MissionPlaceBeacon>;
   updateMission: MissionUpdator<MissionPlaceBeacon>;
+  onRemoveMission: () => void;
 };
 
 export const MissionPlaceBeaconForm: Component<Props> = props => {
