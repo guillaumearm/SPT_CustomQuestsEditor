@@ -288,7 +288,9 @@ const App: Component = () => {
         height: '100vh',
       }}
     >
-      <AppTitle>{`Custom Quests Editor v${packageJson.version}`}</AppTitle>
+      <AppTitle
+        customQuestsVersion={packageJson.custom_quests_target_version}
+      >{`Custom Quests Editor v${packageJson.version}`}</AppTitle>
       <DndJsonHandler
         isDraggingSignal={isDraggingSignal}
         onDropJson={(fileName, rawData) => {
