@@ -1,6 +1,8 @@
 import { Component } from 'solid-js';
 
 type Props = {
+  min?: number;
+  max?: number;
   value: number;
   setValue: (xp: number) => void;
   fieldName: string;
@@ -23,6 +25,8 @@ export const QuestNumberInput: Component<Props> = props => {
         {props.fieldName}
       </label>
       <input
+        min={props.min}
+        max={props.max}
         onInput={e => props.setValue(Number(e.currentTarget.value))}
         value={props.value}
         type="number"

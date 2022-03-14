@@ -162,6 +162,12 @@ export const QuestForm: Component<Props> = props => {
           selectedValue={props.quest.image ?? ALL_QUESTS_IMAGES[0]}
           onValueChanged={v => props.updateQuest(q => ({ ...q, image: v as string }))}
         />
+        <QuestNumberInput
+          min={1}
+          fieldName="level_needed"
+          value={props.quest.level_needed ?? 1}
+          setValue={level_needed => props.updateQuest(q => ({ ...q, level_needed }))}
+        />
         <IdsForm
           editable
           wordingButton="quest"
