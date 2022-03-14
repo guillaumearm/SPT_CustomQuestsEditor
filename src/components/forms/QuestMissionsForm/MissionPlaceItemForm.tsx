@@ -1,6 +1,6 @@
-import { Component, createMemo } from 'solid-js';
+import { Component, createMemo, Show } from 'solid-js';
 import { DeepReadonly } from 'solid-js/store';
-import { MissionPlaceItem } from '../../../types';
+import { MissionPlaceBeacon, MissionPlaceItem, MissionPlaceSignalJammer } from '../../../types';
 import { MissionAcceptedItemsInput } from '../MissionAcceptedItemsInput';
 import { MissionNeedSurviveInput } from '../MissionNeedSurviveInput';
 import { MissionZoneIdInput } from '../MissionZoneIdInput';
@@ -8,11 +8,16 @@ import { QuestNumberInput } from '../QuestNumberInput';
 import { QuestStringInput } from '../QuestStringInput';
 import { MissionUpdator } from './types';
 
+export type CompatiblePlaceItemMission =
+  | MissionPlaceItem
+  | MissionPlaceBeacon
+  | MissionPlaceSignalJammer;
+
 type Props = {
   questId: string;
   index: number;
-  mission: DeepReadonly<MissionPlaceItem>;
-  updateMission: MissionUpdator<MissionPlaceItem>;
+  mission: DeepReadonly<CompatiblePlaceItemMission>;
+  updateMission: MissionUpdator<CompatiblePlaceItemMission>;
 };
 
 export const MissionPlaceItemForm: Component<Props> = props => {
@@ -47,13 +52,18 @@ export const MissionPlaceItemForm: Component<Props> = props => {
         mission={props.mission}
         updateMission={props.updateMission}
       />
-      <MissionAcceptedItemsInput
-        updateItems={fn => {
-          props.updateMission(m => ({ ...m, accepted_items: fn(m.accepted_items) }));
-        }}
-        items={props.mission.accepted_items}
-        uniqId={uniqId()}
-      />
+      <Show when={props.mission.type === 'PlaceItem'}>
+        <MissionAcceptedItemsInput
+          updateItems={fn => {
+            props.updateMission(m => ({
+              ...m,
+              accepted_items: fn((m as MissionPlaceItem).accepted_items),
+            }));
+          }}
+          items={(props.mission as MissionPlaceItem).accepted_items}
+          uniqId={uniqId()}
+        />
+      </Show>
     </>
   );
 };

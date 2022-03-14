@@ -1,13 +1,15 @@
 import { Component, createMemo, Show } from 'solid-js';
 import { DeepReadonly } from 'solid-js/store';
-import { MissionPlaceItem } from '../../../types';
+import { MissionPlaceBeacon, MissionPlaceItem, MissionPlaceSignalJammer } from '../../../types';
 import { MissionUpdator } from '../QuestMissionsForm/types';
 import { QuestStringInput } from '../QuestStringInput';
 
+type CompatibleMission = MissionPlaceItem | MissionPlaceBeacon | MissionPlaceSignalJammer;
+
 type Props = {
   uniqId: string;
-  mission: DeepReadonly<MissionPlaceItem>;
-  updateMission: MissionUpdator<MissionPlaceItem>;
+  mission: DeepReadonly<CompatibleMission>;
+  updateMission: MissionUpdator<CompatibleMission>;
 };
 
 export const MissionNeedSurviveInput: Component<Props> = props => {

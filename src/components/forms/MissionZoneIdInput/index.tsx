@@ -1,7 +1,7 @@
 import { Component, createEffect, createMemo, createSignal } from 'solid-js';
 import { DeepReadonly } from 'solid-js/store';
 import { allZonesByMap } from '../../../helpers/allZonesByMap';
-import { MissionPlaceItem } from '../../../types';
+import { MissionPlaceBeacon, MissionPlaceItem, MissionPlaceSignalJammer } from '../../../types';
 import { MissionUpdator } from '../QuestMissionsForm/types';
 import { QuestSimpleDropdown } from '../QuestSimpleDropdown';
 
@@ -11,9 +11,11 @@ const findMapForZoneId = (zoneId: string): string | undefined => {
   return ALL_CONCERNED_MAP.find(mapId => allZonesByMap[mapId].includes(zoneId));
 };
 
+type CompatibleMission = MissionPlaceItem | MissionPlaceBeacon | MissionPlaceSignalJammer;
+
 type Props = {
-  mission: DeepReadonly<MissionPlaceItem>;
-  updateMission: MissionUpdator<MissionPlaceItem>;
+  mission: DeepReadonly<CompatibleMission>;
+  updateMission: MissionUpdator<CompatibleMission>;
 };
 
 export const MissionZoneIdInput: Component<Props> = props => {

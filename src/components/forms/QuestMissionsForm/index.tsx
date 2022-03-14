@@ -4,17 +4,13 @@ import { DeepReadonly } from 'solid-js/store';
 import { ChooseMissionType } from './ChooseMissionType';
 import { MissionGiveItemForm } from './MissionGiveItemForm';
 import { MissionKillForm } from './MissionKillForm';
-import { MissionPlaceBeaconForm } from './MissionPlaceBeaconForm';
-import { MissionPlaceItemForm } from './MissionPlaceItemForm';
-import { MissionPlaceSignalJammerForm } from './MissionPlaceSignalJammerForm';
+import { CompatiblePlaceItemMission, MissionPlaceItemForm } from './MissionPlaceItemForm';
 import { MissionVisitPlaceForm } from './MissionVisitPlaceForm';
 
 import {
   MissionGiveItem,
   MissionKill,
-  MissionPlaceBeacon,
   MissionPlaceItem,
-  MissionPlaceSignalJammer,
   MissionVisitPlace,
   QuestData,
   QuestMission,
@@ -87,30 +83,30 @@ const QuestMissionCard: Component<QuestMissionCardProps> = props => {
             questId={props.questId}
             index={props.index}
             mission={props.mission as MissionPlaceItem}
-            updateMission={props.updateMission as MissionUpdator<MissionPlaceItem>}
+            updateMission={props.updateMission as MissionUpdator<CompatiblePlaceItemMission>}
           >
             {headerMissionJSX()}
           </MissionPlaceItemForm>
         </Match>
         <Match when={props.mission.type === 'PlaceBeacon'}>
-          <MissionPlaceBeaconForm
+          <MissionPlaceItemForm
             questId={props.questId}
             index={props.index}
-            mission={props.mission as MissionPlaceBeacon}
-            updateMission={props.updateMission as MissionUpdator<MissionPlaceBeacon>}
+            mission={props.mission as MissionPlaceItem}
+            updateMission={props.updateMission as MissionUpdator<CompatiblePlaceItemMission>}
           >
             {headerMissionJSX()}
-          </MissionPlaceBeaconForm>
+          </MissionPlaceItemForm>
         </Match>
         <Match when={props.mission.type === 'PlaceSignalJammer'}>
-          <MissionPlaceSignalJammerForm
+          <MissionPlaceItemForm
             questId={props.questId}
             index={props.index}
-            mission={props.mission as MissionPlaceSignalJammer}
-            updateMission={props.updateMission as MissionUpdator<MissionPlaceSignalJammer>}
+            mission={props.mission as MissionPlaceItem}
+            updateMission={props.updateMission as MissionUpdator<CompatiblePlaceItemMission>}
           >
             {headerMissionJSX()}
-          </MissionPlaceSignalJammerForm>
+          </MissionPlaceItemForm>
         </Match>
         <Match when={props.mission.type === 'VisitPlace'}>
           <MissionVisitPlaceForm
