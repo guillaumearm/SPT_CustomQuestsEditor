@@ -1,6 +1,6 @@
 {
   "name": "spt-custom-quests-editor",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "custom_quests_target_version": "1.0.0",
   "description": "Online editor for Custom Quests mod (Single Player Tarkov)",
   "scripts": {
