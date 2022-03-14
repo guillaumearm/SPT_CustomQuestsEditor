@@ -102,7 +102,7 @@ const assertValidQuest = (questData: any): asserts questData is QuestData => {
     void assertValidQuestString(q.success_message, 'success_message');
   }
 
-  if (q.level_needed !== undefined && typeof q.level_needed !== 'undefined') {
+  if (q.level_needed !== undefined && typeof q.level_needed !== 'number') {
     throw error(`'level_needed' should be a number`);
   }
 
