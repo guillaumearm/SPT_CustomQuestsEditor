@@ -4,9 +4,10 @@ import { MissionPlaceBeacon } from '../../../types';
 import { MissionUpdator } from './types';
 
 type Props = {
+  questId: string;
+  index: number;
   mission: DeepReadonly<MissionPlaceBeacon>;
   updateMission: MissionUpdator<MissionPlaceBeacon>;
-  onRemoveMission: () => void;
 };
 
 export const MissionPlaceBeaconForm: Component<Props> = props => {

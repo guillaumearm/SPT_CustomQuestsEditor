@@ -1,4 +1,4 @@
-import { Component, For } from 'solid-js';
+import { Component, For, Match, Switch } from 'solid-js';
 
 export const ALL_TRADERS = [
   'prapor',
@@ -13,6 +13,7 @@ export const ALL_TRADERS = [
 
 type Props = {
   fieldName: string;
+  fieldLink?: string;
   formIndex: number;
   values: string[];
   onValueChanged: (v: string) => void;
@@ -33,7 +34,13 @@ export const QuestSimpleDropdown: Component<Props> = props => {
         }}
         for={`form_${props.fieldName}`}
       >
-        {props.fieldName}:{' '}
+        <Switch fallback={<>{props.fieldName}: </>}>
+          <Match when={props.fieldLink}>
+            <a style={{ color: '#7777FF' }} target="_blank" href={props.fieldLink}>
+              {props.fieldName}:{' '}
+            </a>
+          </Match>
+        </Switch>
       </label>
       <select
         tabIndex={props.formIndex}

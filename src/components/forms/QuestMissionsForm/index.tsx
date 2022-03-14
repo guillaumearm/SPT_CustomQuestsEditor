@@ -78,43 +78,46 @@ const QuestMissionCard: Component<QuestMissionCardProps> = props => {
             index={props.index}
             mission={props.mission as MissionGiveItem}
             updateMission={props.updateMission as MissionUpdator<MissionGiveItem>}
-            onRemoveMission={props.onRemoveMission}
           >
             {headerMissionJSX()}
           </MissionGiveItemForm>
         </Match>
         <Match when={props.mission.type === 'PlaceItem'}>
           <MissionPlaceItemForm
+            questId={props.questId}
+            index={props.index}
             mission={props.mission as MissionPlaceItem}
             updateMission={props.updateMission as MissionUpdator<MissionPlaceItem>}
-            onRemoveMission={props.onRemoveMission}
           >
             {headerMissionJSX()}
           </MissionPlaceItemForm>
         </Match>
         <Match when={props.mission.type === 'PlaceBeacon'}>
           <MissionPlaceBeaconForm
+            questId={props.questId}
+            index={props.index}
             mission={props.mission as MissionPlaceBeacon}
             updateMission={props.updateMission as MissionUpdator<MissionPlaceBeacon>}
-            onRemoveMission={props.onRemoveMission}
           >
             {headerMissionJSX()}
           </MissionPlaceBeaconForm>
         </Match>
         <Match when={props.mission.type === 'PlaceSignalJammer'}>
           <MissionPlaceSignalJammerForm
+            questId={props.questId}
+            index={props.index}
             mission={props.mission as MissionPlaceSignalJammer}
             updateMission={props.updateMission as MissionUpdator<MissionPlaceSignalJammer>}
-            onRemoveMission={props.onRemoveMission}
           >
             {headerMissionJSX()}
           </MissionPlaceSignalJammerForm>
         </Match>
         <Match when={props.mission.type === 'VisitPlace'}>
           <MissionVisitPlaceForm
+            questId={props.questId}
+            index={props.index}
             mission={props.mission as MissionVisitPlace}
             updateMission={props.updateMission as MissionUpdator<MissionVisitPlace>}
-            onRemoveMission={props.onRemoveMission}
           >
             {headerMissionJSX()}
           </MissionVisitPlaceForm>

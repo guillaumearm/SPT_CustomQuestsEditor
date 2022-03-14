@@ -35,8 +35,30 @@ const ignoreRewardsItemWithEmptyId = (
   });
 };
 
+const ignoreAcceptedItemsWithEmptyId = (
+  data: DeepReadonly<QuestData[]>,
+): DeepReadonly<QuestData[]> => {
+  return data.map(quest => {
+    if (quest.missions) {
+      const filteredMissions = quest.missions.map(m => {
+        if ('accepted_items' in m) {
+          return { ...m, accepted_items: m.accepted_items.filter(itemId => Boolean(itemId)) };
+        }
+        return m;
+      });
+      return { ...quest, missions: filteredMissions };
+    }
+
+    return quest;
+  });
+};
+
 const filterData = (data: DeepReadonly<QuestData[]>): DeepReadonly<QuestData[]> => {
-  return pipe(ignoreRewardsItemWithEmptyId, ignoreQuestsWithEmptyId)(data);
+  return pipe(
+    ignoreRewardsItemWithEmptyId,
+    ignoreQuestsWithEmptyId,
+    ignoreAcceptedItemsWithEmptyId,
+  )(data);
 };
 
 const convertObjectToDataString = (data: DeepReadonly<QuestData[]>) => {

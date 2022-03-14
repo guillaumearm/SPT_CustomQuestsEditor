@@ -4,9 +4,10 @@ import { MissionPlaceSignalJammer } from '../../../types';
 import { MissionUpdator } from './types';
 
 type Props = {
+  questId: string;
+  index: number;
   mission: DeepReadonly<MissionPlaceSignalJammer>;
   updateMission: MissionUpdator<MissionPlaceSignalJammer>;
-  onRemoveMission: () => void;
 };
 
 export const MissionPlaceSignalJammerForm: Component<Props> = props => {

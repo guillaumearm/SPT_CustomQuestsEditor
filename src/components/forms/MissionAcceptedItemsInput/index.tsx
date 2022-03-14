@@ -29,7 +29,6 @@ export const MissionAcceptedItemsInput: Component<Props> = props => {
       <input
         onClick={() => {
           props.updateItems(items => [...items, '']);
-          // props.updateRewards(r => ({ ...r, ['']: 1 }));
         }}
         type="button"
         value="Add item"
