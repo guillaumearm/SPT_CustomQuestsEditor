@@ -16,7 +16,7 @@ import {
   QuestMission,
   QuestUpdator,
 } from '../../../types';
-import { remove, update } from 'ramda';
+import { move, remove, update } from 'ramda';
 import { MissionUpdator } from './types';
 import { EMPTY_MISSIONS, MissionType } from '../../../helpers/mission_validation';
 
@@ -28,9 +28,12 @@ type Props = {
 type QuestMissionCardProps = {
   questId: string;
   index: number;
+  nbMissions: number;
   mission: DeepReadonly<QuestMission>;
   updateMission: MissionUpdator;
   onRemoveMission: () => void;
+  onClickUp: (index: number) => void;
+  onClickDown: (index: number) => void;
 };
 
 const QuestMissionCard: Component<QuestMissionCardProps> = props => {
@@ -40,11 +43,25 @@ const QuestMissionCard: Component<QuestMissionCardProps> = props => {
         <h4 style={{ margin: 0, width: '90%', display: 'inline-block' }}>
           {props.mission.type} mission
         </h4>
+
         <input
           onClick={props.onRemoveMission}
           type="button"
           value="Remove"
           style={{ top: '0px', float: 'right' }}
+        />
+
+        <input
+          disabled={props.index === 0}
+          onClick={() => props.onClickUp(props.index)}
+          type="button"
+          value="Up"
+        />
+        <input
+          disabled={props.index === props.nbMissions - 1}
+          onClick={() => props.onClickDown(props.index)}
+          type="button"
+          value="Down"
         />
       </>
     );
@@ -149,6 +166,26 @@ export const QuestMissionsForm: Component<Props> = props => {
     });
   };
 
+  const reorderUp = (index: number) => {
+    props.updateQuest(q => {
+      const missions = q.missions ?? [];
+      if (index === 0) {
+        return q;
+      }
+      return { ...q, missions: move(index, index - 1, missions) };
+    });
+  };
+
+  const reorderDown = (index: number) => {
+    props.updateQuest(q => {
+      const missions = q.missions ?? [];
+      if (index === missions.length - 1) {
+        return q;
+      }
+      return { ...q, missions: move(index, index + 1, missions) };
+    });
+  };
+
   return (
     <div style={{ padding: '15px' }}>
       <Index each={missions()}>
@@ -156,6 +193,9 @@ export const QuestMissionsForm: Component<Props> = props => {
           return (
             <div style={{ padding: '15px', 'background-color': 'grey' }}>
               <QuestMissionCard
+                nbMissions={missions().length}
+                onClickUp={reorderUp}
+                onClickDown={reorderDown}
                 questId={props.quest.id}
                 index={index}
                 onRemoveMission={() => onRemoveMission(index)}
