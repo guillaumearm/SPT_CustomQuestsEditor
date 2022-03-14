@@ -1,4 +1,4 @@
-import { Component, createMemo, Index, Match, Switch } from 'solid-js';
+import { Component, createMemo, createSignal, Index, Match, Show, Switch } from 'solid-js';
 import { DeepReadonly } from 'solid-js/store';
 
 import { ChooseMissionType } from './ChooseMissionType';
@@ -16,8 +16,9 @@ import {
   QuestMission,
   QuestUpdator,
 } from '../../../types';
-import { update } from 'ramda';
+import { remove, update } from 'ramda';
 import { MissionUpdator } from './types';
+import { EMPTY_MISSIONS, MissionType } from '../../../helpers/mission_validation';
 
 type Props = {
   quest: DeepReadonly<QuestData>;
@@ -124,17 +125,32 @@ const QuestMissionCard: Component<QuestMissionCardProps> = props => {
 };
 
 export const QuestMissionsForm: Component<Props> = props => {
+  const [adding, setAdding] = createSignal(false);
+
   const missions = createMemo<DeepReadonly<QuestMission[]>>(() => {
     return props.quest.missions ?? [];
   });
 
+  const onAddMission = (missionType: MissionType) => {
+    const newMission = EMPTY_MISSIONS[missionType];
+
+    props.updateQuest(q => {
+      const missions = q.missions ?? [];
+      return { ...q, missions: [...missions, newMission] };
+    });
+
+    setAdding(false);
+  };
+
   const onRemoveMission = (indexMission: number) => {
-    console.log(indexMission);
+    props.updateQuest(q => {
+      const missions = q.missions ?? [];
+      return { ...q, missions: remove(indexMission, 1, missions) };
+    });
   };
 
   return (
     <div style={{ padding: '15px' }}>
-      <input disabled={true} type="button" value="Add a mission..." />
       <Index each={missions()}>
         {(m, index) => {
           return (
@@ -157,9 +173,16 @@ export const QuestMissionsForm: Component<Props> = props => {
           );
         }}
       </Index>
-      <div style={{ padding: '15px', 'background-color': 'grey' }}>
-        <ChooseMissionType onClickType={console.log} />
-      </div>
+      <Show when={!adding()}>
+        <input onClick={() => setAdding(true)} type="button" value={'Add a mission...'} />
+      </Show>
+
+      <Show when={adding()}>
+        <div style={{ padding: '15px', 'background-color': 'grey' }}>
+          <input onClick={() => setAdding(false)} type="button" value={'Cancel'} />
+          <ChooseMissionType onClickType={onAddMission} />
+        </div>
+      </Show>
     </div>
   );
 };

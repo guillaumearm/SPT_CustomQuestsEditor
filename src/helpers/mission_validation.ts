@@ -1,16 +1,38 @@
-import { QuestMission, KillTarget } from '../types';
+import {
+  QuestMission,
+  KillTarget,
+  MissionKill,
+  MissionGiveItem,
+  MissionPlaceItem,
+  MissionPlaceBeacon,
+  MissionPlaceSignalJammer,
+  MissionVisitPlace,
+} from '../types';
 import { assertValidQuestString } from './queststring_validation';
 
-const MISSION_TYPES = {
-  Kill: true,
-  GiveItem: true,
-  PlaceItem: true,
-  PlaceBeacon: true,
-  PlaceSignalJammer: true,
-  VisitPlace: true,
+export const EMPTY_MISSIONS = {
+  Kill: { type: 'Kill' } as MissionKill,
+  GiveItem: { type: 'GiveItem', accepted_items: [] } as MissionGiveItem,
+  PlaceItem: {
+    type: 'PlaceItem',
+    accepted_items: [],
+    zone_id: 'gazel',
+  } as MissionPlaceItem,
+  PlaceBeacon: {
+    type: 'PlaceBeacon',
+    zone_id: 'gazel',
+  } as MissionPlaceBeacon,
+  PlaceSignalJammer: {
+    type: 'PlaceSignalJammer',
+    zone_id: 'gazel',
+  } as MissionPlaceSignalJammer,
+  VisitPlace: {
+    type: 'VisitPlace',
+    place_id: 'gazel',
+  } as MissionVisitPlace,
 };
 
-export type MissionType = keyof typeof MISSION_TYPES;
+export type MissionType = keyof typeof EMPTY_MISSIONS;
 
 export const VALID_MISSION_TYPES: MissionType[] = [
   'Kill',

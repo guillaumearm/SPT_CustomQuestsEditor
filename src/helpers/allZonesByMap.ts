@@ -1,5 +1,6 @@
 export const allZonesByMap: Record<string, string[]> = {
   bigmap: [
+    'gazel',
     'place_peacemaker_007_N1',
     'place_peacemaker_002_N1',
     'place_peacemaker_002_N2',
