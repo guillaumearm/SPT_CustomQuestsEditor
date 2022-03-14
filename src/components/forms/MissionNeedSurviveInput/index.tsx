@@ -1,10 +1,19 @@
 import { Component, createMemo, Show } from 'solid-js';
 import { DeepReadonly } from 'solid-js/store';
-import { MissionPlaceBeacon, MissionPlaceItem, MissionPlaceSignalJammer } from '../../../types';
+import {
+  MissionPlaceBeacon,
+  MissionPlaceItem,
+  MissionPlaceSignalJammer,
+  MissionVisitPlace,
+} from '../../../types';
 import { MissionUpdator } from '../QuestMissionsForm/types';
 import { QuestStringInput } from '../QuestStringInput';
 
-type CompatibleMission = MissionPlaceItem | MissionPlaceBeacon | MissionPlaceSignalJammer;
+type CompatibleMission =
+  | MissionPlaceItem
+  | MissionPlaceBeacon
+  | MissionPlaceSignalJammer
+  | MissionVisitPlace;
 
 type Props = {
   uniqId: string;

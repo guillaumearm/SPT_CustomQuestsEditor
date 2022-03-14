@@ -32,8 +32,6 @@ export const MissionPlaceItemForm: Component<Props> = props => {
   return (
     <>
       {props.children}
-
-      <MissionZoneIdInput mission={props.mission} updateMission={props.updateMission} />
       <QuestStringInput
         formIndex={-1}
         updateQuestString={fn => props.updateMission(m => ({ ...m, message: fn(m.message) }))}
@@ -41,6 +39,8 @@ export const MissionPlaceItemForm: Component<Props> = props => {
         questString={props.mission.message}
         fieldName="message"
       />
+
+      <MissionZoneIdInput mission={props.mission} updateMission={props.updateMission} />
 
       <QuestNumberInput
         fieldName="plant_time"
@@ -50,7 +50,11 @@ export const MissionPlaceItemForm: Component<Props> = props => {
       <MissionNeedSurviveInput
         uniqId={uniqId()}
         mission={props.mission}
-        updateMission={props.updateMission}
+        updateMission={fn =>
+          props.updateMission(m => {
+            return fn(m) as CompatiblePlaceItemMission;
+          })
+        }
       />
       <Show when={props.mission.type === 'PlaceItem'}>
         <MissionAcceptedItemsInput
