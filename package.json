@@ -7,6 +7,7 @@
     "start": "vite",
     "dev": "vite",
     "build": "vite build",
+    "build:production": "vite build --base=/aki_CustomQuestsEditor/",
     "serve": "vite preview",
     "lint": "eslint .  --max-warnings 0 --ext .ts,.tsx,.js",
     "lint:all": "npm run lint && npm run prettier:check",
@@ -15,7 +16,7 @@
     "test:all": "npm run lint:all && yarn run tsc && npm run build",
     "tsc": "tsc -p . --noEmit",
     "preversion": "npm run test:all",
-    "deploy": "npm run test:all && npm run gh-pages",
+    "deploy": "npm run lint:all && npm run tsc && npm run build:production && npm run gh-pages",
     "gh-pages": "gh-pages -d dist -b gh-pages",
     "clean": "rimraf dist"
   },
