@@ -21,7 +21,7 @@ export const MissionKillForm: Component<Props> = props => {
   });
 
   const missionCount = createMemo(() => {
-    return props.mission.count ?? 0;
+    return props.mission.count ?? 1;
   });
 
   const uniqId = createMemo(() => {
@@ -50,6 +50,7 @@ export const MissionKillForm: Component<Props> = props => {
         onValueChanged={v => props.updateMission(m => ({ ...m, target: v as KillTarget }))}
       />
       <QuestNumberInput
+        min={1}
         fieldName="count"
         value={missionCount()}
         setValue={c => props.updateMission(m => ({ ...m, count: c }))}
