@@ -21,7 +21,7 @@ export const VALID_MISSION_TYPES: MissionType[] = [
   'VisitPlace',
 ];
 
-const VALID_KILL_TARGETS: KillTarget[] = ['Savage', 'AnyPmc', 'Usec', 'Bear'];
+export const VALID_KILL_TARGETS: KillTarget[] = ['Savage', 'AnyPmc', 'Usec', 'Bear'];
 
 const validateLocations = (mission: any) => {
   if (mission.locations !== undefined && !Array.isArray(mission.locations)) {

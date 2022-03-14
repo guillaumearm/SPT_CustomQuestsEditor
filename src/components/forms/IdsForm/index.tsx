@@ -1,6 +1,5 @@
 import { Component, createMemo, createSignal, For, Show } from 'solid-js';
-import { DeepReadonly } from 'solid-js/store';
-import { QuestData, QuestUpdator } from '../../../types';
+
 import { QuestGenericDropdown } from '../QuestGenericDropdown';
 
 export const ALL_TRADERS = [
@@ -15,26 +14,24 @@ export const ALL_TRADERS = [
 ];
 
 type Props = {
-  uniqQuestId: string;
-  fieldName: 'locked_by_quests' | 'unlock_on_quest_start';
-  quest: DeepReadonly<QuestData>;
-  updateQuest: QuestUpdator;
+  editable?: boolean;
+  wordingButton: string;
+  uniqId: string;
+  fieldName: 'locked_by_quests' | 'unlock_on_quest_start' | 'locations';
+  values: readonly string[];
+  updateValues: (fn: (values: readonly string[]) => readonly string[]) => void;
   possibleValues?: string[];
 };
 
-export const QuestIdsForm: Component<Props> = props => {
+export const IdsForm: Component<Props> = props => {
   const [adding, setAdding] = createSignal(false);
 
-  const questIds = createMemo(() => {
-    return props.quest[props.fieldName] ?? [];
-  });
-
-  const uniqQuestId = createMemo(() => {
-    return `${props.uniqQuestId}_${props.fieldName}`;
+  const uniqId = createMemo(() => {
+    return `${props.uniqId}_${props.fieldName}`;
   });
 
   const possibleValues = createMemo(() => {
-    return (props.possibleValues ?? []).filter(v => !questIds().includes(v));
+    return (props.possibleValues ?? []).filter(v => !props.values.includes(v));
   });
 
   return (
@@ -55,7 +52,7 @@ export const QuestIdsForm: Component<Props> = props => {
         type="button"
         tabIndex={-1}
         disabled={adding()}
-        value="Add quest id..."
+        value={`Add ${props.wordingButton} id...`}
         onClick={() => {
           setAdding(true);
         }}
@@ -63,20 +60,15 @@ export const QuestIdsForm: Component<Props> = props => {
       <div style={{ 'padding-left': '180px' }}>
         <Show when={adding()}>
           <QuestGenericDropdown
+            editable={props.editable}
             formIndex={0}
             fieldName=""
-            uniqQuestId={`${uniqQuestId()}_add_${props.fieldName}`}
+            uniqId={`${uniqId()}_add`}
             allValues={possibleValues()}
-            value={'Select quest id...'}
+            value={`Select ${props.wordingButton} id...`}
             onSelectValue={v => {
-              props.updateQuest(q => {
-                setAdding(false);
-                const questIds = q[props.fieldName] ?? [];
-                return {
-                  ...q,
-                  [props.fieldName]: [v, ...questIds],
-                };
-              });
+              setAdding(false);
+              return props.updateValues(ids => [v, ...ids]);
             }}
           >
             <input
@@ -89,20 +81,18 @@ export const QuestIdsForm: Component<Props> = props => {
             />
           </QuestGenericDropdown>
         </Show>
-        <For each={questIds()}>
+        <For each={props.values}>
           {(questId, index) => (
             <QuestGenericDropdown
+              editable={props.editable}
               formIndex={0}
               fieldName=""
-              uniqQuestId={`${uniqQuestId()}_${index()}`}
+              uniqId={`${uniqId()}_${index()}`}
               allValues={possibleValues()}
               value={questId}
               onSelectValue={v => {
-                props.updateQuest(q => {
-                  return {
-                    ...q,
-                    [props.fieldName]: q[props.fieldName]?.map((id, i) => (i === index() ? v : id)),
-                  };
+                props.updateValues(values => {
+                  return values.map((id, i) => (i === index() ? v : id));
                 });
               }}
             >
@@ -111,11 +101,8 @@ export const QuestIdsForm: Component<Props> = props => {
                 type="button"
                 value="Remove"
                 onClick={() => {
-                  props.updateQuest(q => {
-                    return {
-                      ...q,
-                      [props.fieldName]: q[props.fieldName]?.filter((_id, i) => i !== index()),
-                    };
+                  return props.updateValues(values => {
+                    return values.filter((_id, i) => i !== index());
                   });
                 }}
               />

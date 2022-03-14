@@ -11,7 +11,7 @@ import { QuestDisabledInput } from '../forms/QuestDisabledInput';
 import { QuestSimpleInput } from '../forms/QuestSimpleInput';
 import { QuestStringInput } from '../forms/QuestStringInput';
 import { QuestGenericDropdown } from '../forms/QuestGenericDropdown';
-import { QuestIdsForm } from '../forms/QuestIdsForm';
+import { IdsForm } from '../forms/IdsForm';
 import { ALL_QUEST_TYPES } from '../../helpers/validation';
 import { QuestSimpleDropdown } from '../forms/QuestSimpleDropdown';
 import { ALL_QUESTS_IMAGES } from '../../helpers/all_quests_images';
@@ -49,6 +49,14 @@ export const QuestForm: Component<Props> = props => {
 
   const rewardsItems = createMemo(() => {
     return props.quest.rewards?.items ?? {};
+  });
+
+  const lockedByQuests = createMemo(() => {
+    return props.quest.locked_by_quests ?? [];
+  });
+
+  const unlockOnQuestStart = createMemo(() => {
+    return props.quest.unlock_on_quest_start ?? [];
   });
 
   return (
@@ -101,7 +109,7 @@ export const QuestForm: Component<Props> = props => {
         <QuestGenericDropdown
           formIndex={6}
           fieldName="trader_id"
-          uniqQuestId={uniqQuestId()}
+          uniqId={uniqQuestId()}
           allValues={ALL_TRADERS}
           value={props.quest.trader_id}
           setValue={v => props.updateQuest(q => ({ ...q, trader_id: v }))}
@@ -109,7 +117,7 @@ export const QuestForm: Component<Props> = props => {
         <QuestStringInput
           formIndex={8}
           updateQuestString={fn => props.updateQuest(q => ({ ...q, name: fn(q.name) }))}
-          uniqQuestId={uniqQuestId()}
+          uniqId={uniqQuestId()}
           questString={props.quest.name}
           fieldName="name"
         />
@@ -118,7 +126,7 @@ export const QuestForm: Component<Props> = props => {
           updateQuestString={fn =>
             props.updateQuest(q => ({ ...q, description: fn(q.description) }))
           }
-          uniqQuestId={uniqQuestId()}
+          uniqId={uniqQuestId()}
           questString={props.quest.description}
           fieldName="description"
         />
@@ -127,7 +135,7 @@ export const QuestForm: Component<Props> = props => {
           updateQuestString={fn =>
             props.updateQuest(q => ({ ...q, success_message: fn(q.success_message) }))
           }
-          uniqQuestId={uniqQuestId()}
+          uniqId={uniqQuestId()}
           questString={props.quest.success_message}
           fieldName="success_message"
         />
@@ -154,16 +162,26 @@ export const QuestForm: Component<Props> = props => {
           selectedValue={props.quest.image ?? ALL_QUESTS_IMAGES[0]}
           onValueChanged={v => props.updateQuest(q => ({ ...q, image: v as string }))}
         />
-        <QuestIdsForm
+        <IdsForm
+          editable
+          wordingButton="quest"
           possibleValues={props.allQuestIds}
-          {...props}
-          uniqQuestId={uniqQuestId()}
+          values={lockedByQuests()}
+          updateValues={fn =>
+            props.updateQuest(q => ({ ...q, locked_by_quests: fn(lockedByQuests()) }))
+          }
+          uniqId={uniqQuestId()}
           fieldName="locked_by_quests"
         />
-        <QuestIdsForm
+        <IdsForm
+          editable
+          wordingButton="quest"
           possibleValues={props.allQuestIds}
-          {...props}
-          uniqQuestId={uniqQuestId()}
+          values={unlockOnQuestStart()}
+          updateValues={fn =>
+            props.updateQuest(q => ({ ...q, unlock_on_quest_start: fn(unlockOnQuestStart()) }))
+          }
+          uniqId={uniqQuestId()}
           fieldName="unlock_on_quest_start"
         />
         <QuestNumberInput

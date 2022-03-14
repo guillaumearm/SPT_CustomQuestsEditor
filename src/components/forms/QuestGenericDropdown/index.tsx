@@ -15,9 +15,10 @@ type Props = {
   allValues: string[];
   value: string;
   setValue?: (v: string) => void;
-  uniqQuestId: string;
+  uniqId: string;
   fieldName?: string;
   onSelectValue?: (v: string) => void;
+  editable?: boolean;
 };
 
 type SelectEvent = Event & { target: Element; currentTarget: HTMLSelectElement };
@@ -26,11 +27,11 @@ export const QuestGenericDropdown: Component<Props> = props => {
   const [adding, setAdding] = createSignal(false);
 
   createEffect(prev => {
-    if (prev !== props.uniqQuestId) {
+    if (prev !== props.uniqId) {
       setAdding(false);
     }
 
-    return props.uniqQuestId;
+    return props.uniqId;
   });
 
   const values = createMemo(() => {
@@ -124,19 +125,21 @@ export const QuestGenericDropdown: Component<Props> = props => {
               )}
             </For>
           </select>
-          <input
-            tabIndex={props.formIndex + 1}
-            type="button"
-            value="Edit manually..."
-            style={{ display: 'inline-block', float: 'left' }}
-            onClick={() => {
-              setAdding(true);
-              const el = document.getElementById(idInputText());
-              if (el) {
-                el.focus();
-              }
-            }}
-          />
+          <Show when={props.editable}>
+            <input
+              tabIndex={props.formIndex + 1}
+              type="button"
+              value="Edit manually..."
+              style={{ display: 'inline-block', float: 'left' }}
+              onClick={() => {
+                setAdding(true);
+                const el = document.getElementById(idInputText());
+                if (el) {
+                  el.focus();
+                }
+              }}
+            />
+          </Show>
         </Match>
       </Switch>
       {props.children}

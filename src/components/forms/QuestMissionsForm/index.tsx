@@ -1,4 +1,4 @@
-import { Component, createMemo, For, Match, Switch } from 'solid-js';
+import { Component, createMemo, Index, Match, Switch } from 'solid-js';
 import { DeepReadonly } from 'solid-js/store';
 
 import { ChooseMissionType } from './ChooseMissionType';
@@ -29,6 +29,8 @@ type Props = {
 };
 
 type QuestMissionCardProps = {
+  questId: string;
+  index: number;
   mission: DeepReadonly<QuestMission>;
   updateMission: MissionUpdator;
   onRemoveMission: () => void;
@@ -62,6 +64,8 @@ const QuestMissionCard: Component<QuestMissionCardProps> = props => {
       <Switch fallback={`Unknown mission type '${props.mission.type}'`}>
         <Match when={props.mission.type === 'Kill'}>
           <MissionKillForm
+            questId={props.questId}
+            index={props.index}
             mission={props.mission as MissionKill}
             updateMission={props.updateMission as MissionUpdator<MissionKill>}
           >
@@ -130,26 +134,28 @@ export const QuestMissionsForm: Component<Props> = props => {
   return (
     <div style={{ padding: '15px' }}>
       <input disabled={true} type="button" value="Add a mission..." />
-      <For each={missions()}>
+      <Index each={missions()}>
         {(m, index) => {
           return (
             <div style={{ padding: '15px', 'background-color': 'grey' }}>
               <QuestMissionCard
-                onRemoveMission={() => onRemoveMission(index())}
+                questId={props.quest.id}
+                index={index}
+                onRemoveMission={() => onRemoveMission(index)}
                 updateMission={fn => {
                   return props.updateQuest(q => {
                     const missions = q.missions ?? [];
-                    const updatedMissions = update(index(), fn(m), missions);
+                    const updatedMissions = update(index, fn(m()), missions);
 
                     return { ...q, missions: updatedMissions };
                   });
                 }}
-                mission={m}
+                mission={m()}
               />
             </div>
           );
         }}
-      </For>
+      </Index>
       <div style={{ padding: '15px', 'background-color': 'grey' }}>
         <ChooseMissionType onClickType={console.log} />
       </div>
