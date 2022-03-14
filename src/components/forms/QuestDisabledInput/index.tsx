@@ -14,7 +14,7 @@ export const QuestDisabledInput: Component<Props> = props => {
   });
 
   return (
-    <div style={{ padding: '15px' }}>
+    <div style={{ padding: '15px', 'padding-bottom': '0px' }}>
       <label
         style={{
           display: 'inline-block',

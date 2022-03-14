@@ -74,6 +74,8 @@ const QuestMissionCard: Component<QuestMissionCardProps> = props => {
         </Match>
         <Match when={props.mission.type === 'GiveItem'}>
           <MissionGiveItemForm
+            questId={props.questId}
+            index={props.index}
             mission={props.mission as MissionGiveItem}
             updateMission={props.updateMission as MissionUpdator<MissionGiveItem>}
             onRemoveMission={props.onRemoveMission}

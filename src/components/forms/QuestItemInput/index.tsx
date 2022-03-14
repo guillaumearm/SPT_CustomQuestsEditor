@@ -21,6 +21,7 @@ type Props = {
   value: string;
   count?: number;
   onCounterChanged?: (c: number) => void;
+  onRemove?: () => void;
 };
 
 export const QuestItemInput: Component<Props> = props => {
@@ -35,15 +36,6 @@ export const QuestItemInput: Component<Props> = props => {
 
     return uniqId();
   });
-
-  const scrollToBottom = () => {
-    const el = document.getElementById('quest_form');
-    if (el) {
-      setTimeout(() => {
-        el.scrollTo(0, el.scrollHeight);
-      }, 0);
-    }
-  };
 
   const nameItem = createMemo(() => {
     return LOCALES_TEMPLATES[props.value]?.Name ?? undefined;
@@ -85,8 +77,6 @@ export const QuestItemInput: Component<Props> = props => {
         type="button"
         value={searchEnabled() ? 'Ok' : 'Search...'}
         onClick={() => {
-          scrollToBottom();
-
           const enabled = searchEnabled();
           if (enabled) {
             setSearchResults([]);
@@ -94,6 +84,17 @@ export const QuestItemInput: Component<Props> = props => {
           setSearchEnabled(!enabled);
         }}
       />
+      <Show when={props.onRemove}>
+        <input
+          type="button"
+          value={'Remove'}
+          onClick={() => {
+            setSearchResults([]);
+            setSearchEnabled(false);
+            props.onRemove?.();
+          }}
+        />
+      </Show>
 
       <Show when={searchEnabled()}>
         <div
@@ -120,7 +121,7 @@ export const QuestItemInput: Component<Props> = props => {
             type="text"
             placeholder="Search for item..."
           />
-          <div style={{ padding: '10px' }}>
+          <div style={{ padding: '10px', color: 'black' }}>
             <For each={searchResults()}>
               {([id, name]) => {
                 return (

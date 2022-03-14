@@ -1,4 +1,5 @@
-import { Component, createMemo, For } from 'solid-js';
+import { omit } from 'ramda';
+import { Component, createMemo, Index } from 'solid-js';
 import { produce } from 'solid-js/store';
 import { QuestItemInput } from '../../forms/QuestItemInput';
 
@@ -22,10 +23,6 @@ type Props = {
 };
 
 export const QuestItemRewardsList: Component<Props> = props => {
-  const addButtonDisabled = createMemo(() => {
-    return props.rewards[''] !== undefined;
-  });
-
   const allItemIds = createMemo(() => {
     return Object.keys(props.rewards);
   });
@@ -51,35 +48,46 @@ export const QuestItemRewardsList: Component<Props> = props => {
         }}
         type="button"
         value="Add item"
-        disabled={addButtonDisabled()}
       />
-      <For each={allItemIds()}>
+      <Index each={allItemIds()}>
         {(itemId, i) => (
           <QuestItemInput
-            index={i()}
-            count={props.rewards[itemId] ?? 1}
-            onCounterChanged={v => props.updateRewards(r => ({ ...r, [itemId]: v }))}
+            index={i}
+            count={props.rewards[itemId()] ?? 1}
+            onCounterChanged={v =>
+              props.updateRewards(
+                produce(r => {
+                  r[itemId()] = v;
+                  // return { ...r, [itemId()]: v };
+                }),
+              )
+            }
             fieldName=""
-            uniqQuestId={`${props.uniqQuestId}_${i()}`}
-            value={itemId}
+            uniqQuestId={`${props.uniqQuestId}_${i}`}
+            value={itemId()}
             onChange={newId => {
               props.updateRewards(
                 produce(r => {
-                  if (newId === itemId) {
+                  if (newId === itemId()) {
                     return;
                   }
                   if (r[newId]) {
-                    r[newId] += r[itemId];
+                    r[newId] += r[itemId()];
                   } else {
-                    r[newId] = r[itemId];
+                    r[newId] = r[itemId()];
                   }
-                  delete r[itemId];
+                  delete r[itemId()];
                 }),
               );
             }}
+            onRemove={() => {
+              props.updateRewards(items => {
+                return omit([itemId()], items);
+              });
+            }}
           />
         )}
-      </For>
+      </Index>
     </div>
   );
 };
