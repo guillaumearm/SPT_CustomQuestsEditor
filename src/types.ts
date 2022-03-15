@@ -26,7 +26,7 @@ const ALL_LOCATIONS_OBJ = {
   woods: true,
 };
 
-export const ALL_LOCATIONS = Object.keys(ALL_DESCRIPTIVE_LOCATION_OBJ);
+export const ALL_LOCATIONS = Object.keys(ALL_LOCATIONS_OBJ);
 export type PossibleLocation = keyof typeof ALL_LOCATIONS_OBJ;
 
 export const ALL_DESCRIPTIVE_LOCATION = Object.keys(ALL_DESCRIPTIVE_LOCATION_OBJ);
