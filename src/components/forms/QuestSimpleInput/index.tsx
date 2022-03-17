@@ -1,4 +1,4 @@
-import { Component } from 'solid-js';
+import { Component, createEffect } from 'solid-js';
 import { DeepReadonly } from 'solid-js/store';
 import { QuestData, QuestUpdator } from '../../../types';
 
@@ -12,6 +12,18 @@ type Props = {
 };
 
 export const QuestSimpleInput: Component<Props> = props => {
+  // autofocus is field when empty
+  createEffect(() => {
+    if (props.fieldName === 'id' && !props.quest.id) {
+      const el = document.getElementById(`form_${props.fieldName}`);
+      if (el) {
+        el.focus();
+      }
+    }
+
+    return props.quest.id;
+  });
+
   return (
     <div style={{ padding: '15px' }}>
       <label
