@@ -169,11 +169,10 @@ const App: Component = () => {
     const selectedFileIndex = state.selections.file;
 
     if (selectedFileIndex !== null) {
-      setState('files', selectedFileIndex, 'data', quests => [...quests, createEmptyQuest()]);
+      const lastIndex = state.files[selectedFileIndex].data.length;
 
-      if (state.selections.quest === null) {
-        setState('selections', 'quest', 0);
-      }
+      setState('files', selectedFileIndex, 'data', quests => [...quests, createEmptyQuest()]);
+      setState('selections', 'quest', lastIndex);
     }
   };
 
@@ -261,11 +260,10 @@ const App: Component = () => {
   };
 
   const createNewFile = () => {
-    setState('files', files => [...files, { name: 'new_quest_file.json', data: [] }]);
+    const lastIndex = state.files.length;
 
-    if (state.selections.file === null) {
-      setState('selections', 'file', 0);
-    }
+    setState('files', files => [...files, { name: 'new_quest_file.json', data: [] }]);
+    setState('selections', 'file', lastIndex);
   };
 
   const allQuestIds = createMemo(() => {
