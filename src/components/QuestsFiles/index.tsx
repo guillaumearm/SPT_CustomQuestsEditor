@@ -39,7 +39,7 @@ const QuestsFiles: Component<Props> = props => {
           />
         )}
       </For>
-      <div style={{ margin: '10px' }}>
+      <div style={{ margin: '10px 0 10px 0' }}>
         <input onClick={() => props.onCreateNewFile()} type="button" value="Create new file..." />
       </div>
       {props.children}

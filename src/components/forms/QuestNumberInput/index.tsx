@@ -17,7 +17,7 @@ export const QuestNumberInput: Component<Props> = props => {
           float: 'left',
           clear: 'left',
           width: '180px',
-          'text-align': 'right',
+          'text-align': 'left',
           'margin-right': '10px',
         }}
         for={`form_${props.fieldName}`}

@@ -42,7 +42,7 @@ export const IdsForm: Component<Props> = props => {
           float: 'left',
           clear: 'left',
           width: '180px',
-          'text-align': 'right',
+          'text-align': 'left',
           'margin-right': '10px',
         }}
       >
@@ -74,6 +74,7 @@ export const IdsForm: Component<Props> = props => {
             <input
               style={{ display: 'inline-block', float: 'left' }}
               type="button"
+              className={'info-button'}
               value="Cancel"
               onClick={() => {
                 setAdding(false);
