@@ -1,7 +1,7 @@
 import { omit } from 'ramda';
 import { Component, createMemo, Index } from 'solid-js';
 import { produce } from 'solid-js/store';
-import { QuestItemInput } from '../../forms/QuestItemInput';
+import { QuestItemInput } from '../QuestItemInput';
 
 export const ALL_TRADERS = [
   'prapor',
@@ -35,7 +35,7 @@ export const QuestItemRewardsList: Component<Props> = props => {
           // float: 'left',
           clear: 'left',
           width: '180px',
-          'text-align': 'right',
+          'text-align': 'left',
           'margin-right': '10px',
           'margin-bottom': '10px',
         }}

@@ -40,13 +40,14 @@ const QuestMissionCard: Component<QuestMissionCardProps> = props => {
   const headerMissionJSX = createMemo(() => {
     return (
       <>
-        <h4 style={{ margin: 0, width: '90%', display: 'inline-block' }}>
+        <h4 style={{ margin: '0 0 15px 0'}}>
           {props.mission.type} mission
         </h4>
 
         <input
           onClick={props.onRemoveMission}
           type="button"
+          className={'delete-button'}
           value="Remove"
           style={{ top: '0px', float: 'right' }}
         />
@@ -55,6 +56,7 @@ const QuestMissionCard: Component<QuestMissionCardProps> = props => {
           disabled={props.index === 0}
           onClick={() => props.onClickUp(props.index)}
           type="button"
+          style={{margin: '0 10px 0 0'}}
           value="Up"
         />
         <input
@@ -187,11 +189,11 @@ export const QuestMissionsForm: Component<Props> = props => {
   };
 
   return (
-    <div style={{ padding: '15px' }}>
+    <div style={{ padding: '15px 0 0 0' }}>
       <Index each={missions()}>
         {(m, index) => {
           return (
-            <div style={{ padding: '15px', 'background-color': 'grey' }}>
+            <div>
               <QuestMissionCard
                 nbMissions={missions().length}
                 onClickUp={reorderUp}
@@ -214,12 +216,12 @@ export const QuestMissionsForm: Component<Props> = props => {
         }}
       </Index>
       <Show when={!adding()}>
-        <input onClick={() => setAdding(true)} type="button" value={'Add a mission...'} />
+        <input style={{ margin: '15px 0 0 0' }} onClick={() => setAdding(true)} type="button" value={'Add a mission...'} />
       </Show>
 
       <Show when={adding()}>
-        <div style={{ padding: '15px', 'background-color': 'grey' }}>
-          <input onClick={() => setAdding(false)} type="button" value={'Cancel'} />
+        <div style={{ margin: '15px 0 0 0' }}>
+          <input onClick={() => setAdding(false)} className={'info-button'} type="button" value={'Cancel'} />
           <ChooseMissionType onClickType={onAddMission} />
         </div>
       </Show>

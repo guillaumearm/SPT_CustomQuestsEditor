@@ -77,7 +77,7 @@ export const DownloadButton: Component<DownloadButtonProps> = props => {
 
   return (
     <a style={{}} download={fileName()} href={fileData()}>
-      <button tabIndex={props.tabIndex} type="button">{`Download ${fileName()}`}</button>
+      <button tabIndex={props.tabIndex} className={'download-button'} type="button">{`Download ${fileName()}`}</button>
     </a>
   );
 };

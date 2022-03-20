@@ -64,7 +64,7 @@ export const QuestGenericDropdown: Component<Props> = props => {
   };
 
   return (
-    <div style={{ padding: props.paddingValue ? `${props.paddingValue}px` : '15px' }}>
+    <div style={{ padding: '15px' }}>
       <Show when={Boolean(props.fieldName)}>
         <label
           style={{
@@ -72,7 +72,7 @@ export const QuestGenericDropdown: Component<Props> = props => {
             float: 'left',
             clear: 'left',
             width: '180px',
-            'text-align': 'right',
+            'text-align': 'left',
             'margin-right': '10px',
           }}
           for={idInputText()}
