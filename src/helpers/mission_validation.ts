@@ -50,7 +50,9 @@ const validateLocations = (mission: any) => {
     throw new Error(`invalid kill mission: 'locations' should be an array`);
   }
 
-  mission.locations.forEach((locationName: any) => {
+  const locations = mission.locations || [];
+
+  locations.forEach((locationName: any) => {
     // TODO check if locationName is valid (aliases too)
 
     if (!locationName || typeof locationName !== 'string') {
