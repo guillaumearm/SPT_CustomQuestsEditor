@@ -1,6 +1,6 @@
 import { dropLast, equals, move, remove } from 'ramda';
-import { Component, createMemo, createSignal, Show } from 'solid-js';
-import { createStore, DeepReadonly } from 'solid-js/store';
+import { Component, createEffect, createMemo, createSignal, Show } from 'solid-js';
+import { createStore, DeepReadonly, SetStoreFunction, Store } from 'solid-js/store';
 
 import packageJson from '../package.json';
 
@@ -11,7 +11,7 @@ import { QuestForm } from './components/QuestForm';
 import QuestsFiles from './components/QuestsFiles';
 import QuestsList from './components/QuestsList';
 
-import { checkQuestJsonData } from './helpers/validation';
+import { checkQuestJsonData, isStoryCustomQuest } from './helpers/validation';
 
 import { LoadedJsonFile, QuestUpdator } from './types';
 
@@ -114,8 +114,15 @@ const getNewId = (id: string, questIds: string[]) => {
   return id ? `${id}_${n}` : String(n);
 };
 
+function createLocalStore<T>(initState: T): [Store<T>, SetStoreFunction<T>] {
+  const [state, setState] = createStore(initState);
+  if (localStorage.CustomQuestsEditor) setState(JSON.parse(localStorage.CustomQuestsEditor));
+  createEffect(() => (localStorage.CustomQuestsEditor = JSON.stringify(state)));
+  return [state, setState];
+}
+
 const App: Component = () => {
-  const [state, setState] = createStore<State>(initialState);
+  const [state, setState] = createLocalStore<State>(initialState);
   const isDraggingSignal = createSignal(false);
   const [isDragging] = isDraggingSignal;
 
@@ -296,8 +303,10 @@ const App: Component = () => {
           const lastIndex = files.length;
 
           try {
-            const data = checkQuestJsonData(rawData);
-            setState('files', files => [...files, { name: fileName, data }]);
+            const storyItems = checkQuestJsonData(rawData);
+            const customQuests = storyItems.filter(isStoryCustomQuest);
+
+            setState('files', files => [...files, { name: fileName, data: customQuests }]);
           } catch (err) {
             console.warn(`Custom Quests Editor: Unable to load json quest file '${fileName}'`);
             console.error(`${err}`);

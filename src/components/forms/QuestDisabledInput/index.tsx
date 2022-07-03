@@ -1,10 +1,10 @@
 import { Component, createMemo } from 'solid-js';
 import { DeepReadonly } from 'solid-js/store';
-import { QuestData, QuestUpdator } from '../../../types';
+import { CustomQuest, QuestUpdator } from '../../../types';
 
 type Props = {
   formIndex: number;
-  quest: DeepReadonly<QuestData>;
+  quest: DeepReadonly<CustomQuest>;
   updateQuest: QuestUpdator;
 };
 

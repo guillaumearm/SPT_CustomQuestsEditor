@@ -12,7 +12,7 @@ import {
   MissionKill,
   MissionPlaceItem,
   MissionVisitPlace,
-  QuestData,
+  CustomQuest,
   QuestMission,
   QuestUpdator,
 } from '../../../types';
@@ -21,7 +21,7 @@ import { MissionUpdator } from './types';
 import { EMPTY_MISSIONS, MissionType } from '../../../helpers/mission_validation';
 
 type Props = {
-  quest: DeepReadonly<QuestData>;
+  quest: DeepReadonly<CustomQuest>;
   updateQuest: QuestUpdator;
 };
 

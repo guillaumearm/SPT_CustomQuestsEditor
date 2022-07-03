@@ -1,13 +1,13 @@
 import { Component, createEffect } from 'solid-js';
 import { DeepReadonly } from 'solid-js/store';
-import { QuestData, QuestUpdator } from '../../../types';
+import { CustomQuest, QuestUpdator } from '../../../types';
 
 type FieldNames = 'id';
 
 type Props = {
   formIndex: number;
   fieldName: FieldNames;
-  quest: DeepReadonly<QuestData>;
+  quest: DeepReadonly<CustomQuest>;
   updateQuest: QuestUpdator;
 };
 

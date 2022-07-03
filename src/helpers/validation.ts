@@ -1,6 +1,65 @@
-import { QuestData, QuestType, QuestRewards, ALL_DESCRIPTIVE_LOCATION } from '../types';
+import {
+  QuestType,
+  QuestRewards,
+  ALL_DESCRIPTIVE_LOCATION,
+  StoryItem,
+  StoryItemBuild,
+  StoryAcceptedItemGroup,
+  CustomQuest,
+} from '../types';
 import { assertValidMission } from './mission_validation';
 import { assertValidQuestString } from './queststring_validation';
+
+/**
+ * Story helpers
+ */
+export const isStoryItemBuild = (item: StoryItem): item is StoryItemBuild => {
+  return item.type === '@build';
+};
+
+const assertValidStoryItemBuild = (item: StoryItem): item is StoryItemBuild => {
+  if (!isStoryItemBuild(item)) {
+    throw error(`'@build' directive: not a valid item`);
+  }
+
+  if (item.attachments !== undefined && typeof item.attachments !== 'object') {
+    throw error(`'@build' directive: item 'attachments' should be an object`);
+  }
+
+  if (item.id === undefined) {
+    throw error(`'@build' directive: no 'id' found`);
+  }
+
+  if (item.item === undefined) {
+    throw error(`'' directive: no 'item' property found`);
+  }
+
+  return true;
+};
+
+export const isStoryAcceptedItemGroup = (item: StoryItem): item is StoryAcceptedItemGroup => {
+  return item.type === '@group';
+};
+
+const assertValidStoryAcceptedItemGroup = (item: StoryItem): item is StoryAcceptedItemGroup => {
+  if (!isStoryAcceptedItemGroup(item)) {
+    throw error(`'@htoup' directive: not a valid item`);
+  }
+
+  if (item.id === undefined) {
+    throw error(`'@group' directive: no 'id' found`);
+  }
+
+  if (item.items !== undefined && !Array.isArray(item.items)) {
+    throw error(`'@group' directive: no valid 'items' array found`);
+  }
+
+  return true;
+};
+
+export const isStoryCustomQuest = (item: StoryItem): item is CustomQuest => {
+  return !isStoryItemBuild(item) && !isStoryAcceptedItemGroup(item);
+};
 
 export const ALL_QUEST_TYPES = ['Completion', 'PickUp', 'Elimination', 'Loyalty', 'Discover'];
 
@@ -57,7 +116,7 @@ const assertValidRewards = (rewards: any): asserts rewards is QuestRewards => {
   });
 };
 
-const assertValidQuest = (questData: any): asserts questData is QuestData => {
+const assertValidQuest = (questData: any): asserts questData is StoryItem => {
   const q = questData;
 
   if (!q.id || typeof q.id !== 'string') {
@@ -143,7 +202,7 @@ const assertValidQuest = (questData: any): asserts questData is QuestData => {
   });
 };
 
-export const checkQuestJsonData = (givenData: any): QuestData[] => {
+export const checkQuestJsonData = (givenData: any): StoryItem[] => {
   const data: any[] = Array.isArray(givenData) ? givenData : [givenData];
 
   const newData = data.map(questData => {
@@ -173,8 +232,14 @@ export const checkQuestJsonData = (givenData: any): QuestData[] => {
     };
   });
 
-  newData.forEach(questData => {
-    void assertValidQuest(questData);
+  newData.forEach(storyItem => {
+    if (isStoryItemBuild(storyItem)) {
+      void assertValidStoryItemBuild(storyItem);
+    } else if (isStoryAcceptedItemGroup(storyItem)) {
+      void assertValidStoryAcceptedItemGroup(storyItem);
+    } else {
+      void assertValidQuest(storyItem);
+    }
   });
 
   return newData;

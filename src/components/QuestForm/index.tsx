@@ -3,7 +3,7 @@ import { DeepReadonly } from 'solid-js/store';
 import {
   ALL_DESCRIPTIVE_LOCATION,
   DescriptiveLocation,
-  QuestData,
+  CustomQuest,
   QuestType,
   QuestUpdator,
 } from '../../types';
@@ -34,7 +34,7 @@ type Props = {
   nbQuests: number;
   allQuestIds: string[];
   questIndex: number | null;
-  quest: DeepReadonly<QuestData>;
+  quest: DeepReadonly<CustomQuest>;
   updateQuest: QuestUpdator;
   onMoveUp?: () => void;
   onMoveDown?: () => void;

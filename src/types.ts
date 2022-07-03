@@ -117,7 +117,7 @@ export type QuestRewards = {
   };
 };
 
-export type QuestData = {
+export type CustomQuest = {
   id: string;
   trader_id: string;
   disabled?: boolean;
@@ -134,12 +134,30 @@ export type QuestData = {
   rewards?: QuestRewards;
 };
 
-export type LoadedJsonFile = {
-  name: string;
-  data: QuestData[];
+export type StoryItemBuildBase = {
+  item: string; // item template id
+  attachments?: Record<string, StoryItemBuildBase>; // indexed by slotId
 };
 
-type QuestUpdateFn = (q: DeepReadonly<QuestData>) => DeepReadonly<QuestData>;
+export type StoryItemBuild = StoryItemBuildBase & {
+  type: '@build';
+  id: string; // can be used for rewards
+};
+
+export type StoryAcceptedItemGroup = {
+  type: '@group';
+  id: string; // can be used for accepted_items
+  items: string[]; // list of item template ids
+};
+
+export type StoryItem = CustomQuest | StoryItemBuild | StoryAcceptedItemGroup;
+
+export type LoadedJsonFile = {
+  name: string;
+  data: CustomQuest[];
+};
+
+type QuestUpdateFn = (q: DeepReadonly<CustomQuest>) => DeepReadonly<CustomQuest>;
 type QuestStringUpdateFn = (q: DeepReadonly<QuestString | undefined>) => DeepReadonly<QuestString>;
 
 type Updator<T> = (fn: T) => void;

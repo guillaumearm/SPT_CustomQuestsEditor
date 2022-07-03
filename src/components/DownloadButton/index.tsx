@@ -1,7 +1,7 @@
 import { pipe } from 'ramda';
 import { Component, createMemo } from 'solid-js';
 import { DeepReadonly } from 'solid-js/store';
-import { LoadedJsonFile, QuestData } from '../../types';
+import { LoadedJsonFile, CustomQuest } from '../../types';
 
 type DownloadButtonProps = {
   tabIndex?: number;
@@ -9,15 +9,17 @@ type DownloadButtonProps = {
   selectedQuestFile: null | number;
 };
 
-const ignoreQuestsWithEmptyId = (data: DeepReadonly<QuestData[]>): DeepReadonly<QuestData[]> => {
+const ignoreQuestsWithEmptyId = (
+  data: DeepReadonly<CustomQuest[]>,
+): DeepReadonly<CustomQuest[]> => {
   return data.filter(q => {
     return q.id !== '';
   });
 };
 
 const ignoreRewardsItemWithEmptyId = (
-  data: DeepReadonly<QuestData[]>,
-): DeepReadonly<QuestData[]> => {
+  data: DeepReadonly<CustomQuest[]>,
+): DeepReadonly<CustomQuest[]> => {
   return data.map(quest => {
     if (quest.rewards && quest.rewards.items) {
       const newItems: Record<string, number> = {};
@@ -36,8 +38,8 @@ const ignoreRewardsItemWithEmptyId = (
 };
 
 const ignoreAcceptedItemsWithEmptyId = (
-  data: DeepReadonly<QuestData[]>,
-): DeepReadonly<QuestData[]> => {
+  data: DeepReadonly<CustomQuest[]>,
+): DeepReadonly<CustomQuest[]> => {
   return data.map(quest => {
     if (quest.missions) {
       const filteredMissions = quest.missions.map(m => {
@@ -53,7 +55,7 @@ const ignoreAcceptedItemsWithEmptyId = (
   });
 };
 
-const filterData = (data: DeepReadonly<QuestData[]>): DeepReadonly<QuestData[]> => {
+const filterData = (data: DeepReadonly<CustomQuest[]>): DeepReadonly<CustomQuest[]> => {
   return pipe(
     ignoreRewardsItemWithEmptyId,
     ignoreQuestsWithEmptyId,
@@ -61,7 +63,7 @@ const filterData = (data: DeepReadonly<QuestData[]>): DeepReadonly<QuestData[]> 
   )(data);
 };
 
-const convertObjectToDataString = (data: DeepReadonly<QuestData[]>) => {
+const convertObjectToDataString = (data: DeepReadonly<CustomQuest[]>) => {
   const filteredData = filterData(data);
 
   return (
