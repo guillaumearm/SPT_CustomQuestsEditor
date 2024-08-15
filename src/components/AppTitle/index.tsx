@@ -24,7 +24,7 @@ export const AppTitle: Component<AppTitleProps> = props => {
         <a
           target="_blank"
           style={{ color: 'blue' }}
-          href="https://hub.sp-tarkov.com/files/file/517-custom-quests/"
+          href="https://hub.sp-tarkov.com/files/file/588-custom-quests/"
         >
           Custom Quests
         </a>{' '}
