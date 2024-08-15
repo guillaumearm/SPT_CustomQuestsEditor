@@ -13,7 +13,7 @@
     "lint:all": "npm run lint && npm run prettier:check",
     "prettier": "prettier --write .",
     "prettier:check": "prettier --check .",
-    "test:all": "npm run lint:all && yarn run tsc && npm run build",
+    "test:all": "npm run lint:all && npm run tsc && npm run build",
     "tsc": "tsc -p . --noEmit",
     "deploy": "npm run lint:all && npm run tsc && npm run build:production && npm run gh-pages",
     "gh-pages": "gh-pages -d dist -b gh-pages",
