@@ -1,6 +1,6 @@
 import { dropLast, equals, move, remove } from 'ramda';
 import { Component, createEffect, createMemo, createSignal, Show } from 'solid-js';
-import { createStore, DeepReadonly, SetStoreFunction, Store } from 'solid-js/store';
+import { createStore, DeepReadonly, SetStoreFunction, Store, StoreNode } from 'solid-js/store';
 
 import packageJson from '../package.json';
 
@@ -114,7 +114,7 @@ const getNewId = (id: string, questIds: string[]) => {
   return id ? `${id}_${n}` : String(n);
 };
 
-function createLocalStore<T>(initState: T): [Store<T>, SetStoreFunction<T>] {
+function createLocalStore<T extends StoreNode>(initState: T): [Store<T>, SetStoreFunction<T>] {
   const [state, setState] = createStore(initState);
   if (localStorage.CustomQuestsEditor) setState(JSON.parse(localStorage.CustomQuestsEditor));
   createEffect(() => (localStorage.CustomQuestsEditor = JSON.stringify(state)));
