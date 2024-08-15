@@ -58,7 +58,7 @@ export const MissionPlaceIdInput: Component<Props> = props => {
       />
       <QuestSimpleDropdown
         fieldName="place_id"
-        fieldLink="https://github.com/guillaumearm/aki_CustomQuests/blob/master/docs/ALL_PLACES.md"
+        fieldLink="https://github.com/guillaumearm/SPT_CustomQuests/blob/master/docs/ALL_PLACES.md"
         formIndex={-1}
         values={availablePlaces()}
         selectedValue={props.mission.place_id}

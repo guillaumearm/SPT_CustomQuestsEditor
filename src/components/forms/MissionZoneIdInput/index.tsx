@@ -58,7 +58,7 @@ export const MissionZoneIdInput: Component<Props> = props => {
       />
       <QuestSimpleDropdown
         fieldName="zone_id"
-        fieldLink="https://github.com/guillaumearm/aki_CustomQuests/blob/master/docs/ALL_ZONES.md"
+        fieldLink="https://github.com/guillaumearm/SPT_CustomQuests/blob/master/docs/ALL_ZONES.md"
         formIndex={-1}
         values={availableZones()}
         selectedValue={props.mission.zone_id}

@@ -1,4 +1,4 @@
-# Custom Quests Editor for spt-aki
+# Custom Quests Editor for SPT
 
 ## Description
 

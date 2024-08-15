@@ -7,7 +7,7 @@
     "start": "vite",
     "dev": "vite",
     "build": "vite build",
-    "build:production": "vite build --base=/aki_CustomQuestsEditor/",
+    "build:production": "vite build --base=/SPT_CustomQuestsEditor/",
     "serve": "vite preview",
     "lint": "eslint .  --max-warnings 0 --ext .ts,.tsx,.js",
     "lint:all": "npm run lint && npm run prettier:check",
