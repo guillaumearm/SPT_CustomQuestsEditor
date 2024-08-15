@@ -47,6 +47,7 @@ export type LocalizedString = {
   kr?: string;
   pl?: string;
   po?: string;
+  ro?: string;
   ru?: string;
   sk?: string;
   tu?: string;

@@ -14,6 +14,7 @@ export const ALL_LOCALES: LocaleName[] = [
   'kr',
   'pl',
   'po',
+  'ro',
   'ru',
   'sk',
   'tu',
