@@ -2,9 +2,11 @@
 
 ## Description
 
-A tool to edit and create new custom quests in single player tarkov.
+An online-tool used to edit and create new custom quests in single player tarkov.
 
 Please take a look to the [Custom Quests](https://hub.sp-tarkov.com/files/file/588-custom-quests) mod for more details.
+
+![Quest Editor preview](./image.png)
 
 #### Installation
 
