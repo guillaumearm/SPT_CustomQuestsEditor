@@ -75,13 +75,20 @@ const DESCRIPTIVE_LOCATION_ALIASES: Record<string, string> = {
   '5704e5fad2720bc05b8b4567': 'reserve',
   '5704e554d2720bac5b8b456e': 'shoreline',
   '5704e3c2d2720bac5b8b4567': 'woods',
+  '5714dc692459777137212e12': 'streets',
+  '653e6760052c01c1c805532f': 'groundzero',
 };
 
 const LOCATION_ALIASES: Record<string, string> = {
   '': 'any',
   bigmap: 'customs',
+  factory4_day: 'factory',
+  factory4_night: 'factory',
   rezervbase: 'reserve',
   labs: 'laboratory',
+  tarkovstreets: 'streets',
+  sandbox: 'groundzero',
+  sandbox_high: 'groundzero',
 };
 
 const error = (msg: string) => new Error(msg);

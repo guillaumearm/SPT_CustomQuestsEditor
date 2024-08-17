@@ -10,6 +10,8 @@ const ALL_DESCRIPTIVE_LOCATION_OBJ = {
   reserve: true,
   shoreline: true,
   woods: true,
+  streets: true,
+  groundzero: true,
 };
 
 const ALL_LOCATIONS_OBJ = {
@@ -24,6 +26,8 @@ const ALL_LOCATIONS_OBJ = {
   reserve: true,
   shoreline: true,
   woods: true,
+  streets: true,
+  groundzero: true,
 };
 
 export const ALL_LOCATIONS = Object.keys(ALL_LOCATIONS_OBJ);
