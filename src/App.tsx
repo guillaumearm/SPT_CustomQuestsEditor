@@ -14,6 +14,7 @@ import QuestsList from './components/QuestsList';
 import { checkQuestJsonData, isStoryCustomQuest } from './helpers/validation';
 
 import { LoadedJsonFile, QuestUpdator } from './types';
+import { isSafeId } from './helpers/quest-id-hash-convention';
 
 const createEmptyQuest = () => ({
   id: '',
@@ -80,8 +81,17 @@ const getQuestIdWithoutNum = (questId: string) => {
   return null;
 };
 
-const getNewId = (id: string, questIds: string[]) => {
+const extractQuestIdSurroundedHash = (givenId: string) => {
+  if (isSafeId(givenId)) {
+    return givenId.slice(1).slice(0, -1);
+  }
+
+  return givenId;
+};
+
+const getNewId = (givenId: string, questIds: string[]) => {
   let n = 0;
+  const id = extractQuestIdSurroundedHash(givenId);
   const splitted = id.split('_');
 
   const lastString = splitted[splitted.length - 1];
@@ -90,7 +100,8 @@ const getNewId = (id: string, questIds: string[]) => {
     const questIdWithoutNum = dropLast(1, splitted).join('_');
     n = Number(lastString);
 
-    questIds.forEach(questId => {
+    questIds.forEach(givenQuestId => {
+      const questId = extractQuestIdSurroundedHash(givenQuestId);
       if (getQuestIdWithoutNum(questId) === questIdWithoutNum) {
         const num = getQuestNum(questId);
         if (num !== null && num > n) {
@@ -99,9 +110,10 @@ const getNewId = (id: string, questIds: string[]) => {
       }
     });
 
-    return questIdWithoutNum ? `${questIdWithoutNum}_${n + 1}` : String(n + 1);
+    return questIdWithoutNum ? `#${questIdWithoutNum}_${n + 1}#` : String(n + 1);
   } else {
-    questIds.forEach(questId => {
+    questIds.forEach(givenQuestId => {
+      const questId = extractQuestIdSurroundedHash(givenQuestId);
       if (getQuestIdWithoutNum(questId) === id) {
         const num = getQuestNum(questId);
         if (num !== null && num >= n) {
@@ -111,7 +123,7 @@ const getNewId = (id: string, questIds: string[]) => {
     });
   }
 
-  return id ? `${id}_${n}` : String(n);
+  return id ? `#${id}_${n}#` : String(n);
 };
 
 function createLocalStore<T extends StoreNode>(initState: T): [Store<T>, SetStoreFunction<T>] {
@@ -236,6 +248,7 @@ const App: Component = () => {
       const quest = state.files[selectedFileIndex].data[questIndex];
       if (quest) {
         const allQuestIds = state.files[selectedFileIndex].data.map(q => q.id);
+        console.log(quest.id, allQuestIds);
         const newId = getNewId(quest.id, allQuestIds);
 
         setState('files', selectedFileIndex, 'data', quests => [

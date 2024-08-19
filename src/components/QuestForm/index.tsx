@@ -8,7 +8,7 @@ import {
   QuestUpdator,
 } from '../../types';
 import { QuestDisabledInput } from '../forms/QuestDisabledInput';
-import { QuestSimpleInput } from '../forms/QuestSimpleInput';
+import { QuestIdInput } from '../forms/QuestSimpleInput';
 import { QuestStringInput } from '../forms/QuestStringInput';
 import { QuestGenericDropdown } from '../forms/QuestGenericDropdown';
 import { IdsForm } from '../forms/IdsForm';
@@ -105,7 +105,7 @@ export const QuestForm: Component<Props> = props => {
 
       <form onSubmit={() => {}} style={{ 'margin-left': '21px' }}>
         <QuestDisabledInput formIndex={2} {...props} />
-        <QuestSimpleInput formIndex={4} {...props} fieldName="id" />
+        <QuestIdInput formIndex={4} {...props} />
         <QuestGenericDropdown
           formIndex={6}
           fieldName="trader_id"
